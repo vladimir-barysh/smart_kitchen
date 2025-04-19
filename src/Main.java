@@ -7,7 +7,7 @@ public class Main {
 
         CentralController controller = new CentralController();
         controller.addDevice(fridge);
-
+//
         controller.runChecks();
     }
 }
