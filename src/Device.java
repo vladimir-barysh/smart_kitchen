@@ -3,6 +3,6 @@ public interface Device {
     void turnOff();
     String getStatus();
     default String makeCoffee() {
-        return "Not supported";
+        return "Не поддерживается";
     }
 }

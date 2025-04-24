@@ -3,7 +3,7 @@ public class Main {
     public static void main(String[] args) {
         CentralController controller = new CentralController();
 
-        ProxyDevice coffeeProxy = new ProxyDevice("CoffeeMachine");
+        ProxyDevice coffeeProxy = new ProxyDevice("Кофемашина");
         controller.addDevice(coffeeProxy);
 
         // Проверка состояния устройств
@@ -12,17 +12,17 @@ public class Main {
         // Включение кофемашины и приготовление кофе
         coffeeProxy.turnOn();
         controller.checkDevices();
-        System.out.println(controller.makeCoffee("CoffeeMachine"));
+        System.out.println(controller.makeCoffee("Кофемашина"));
         controller.sendAlert();
 
         //Установление расписания
         ScheduleManager schedule = new ScheduleManager();
-        schedule.setSchedule("Make coffee every morning at 6:00 am");
+        schedule.setSchedule("Заваривать чашку кофе каждое утро в 6.00");
         controller.addSchedule(schedule);
         controller.executeSchedule();
 
         // Повторное приготовление кофе
-        System.out.println(controller.makeCoffee("CoffeeMachine"));
+        System.out.println(controller.makeCoffee("Кофемашина"));
 
         // Проверка состояния после приготовления
         controller.checkDevices();

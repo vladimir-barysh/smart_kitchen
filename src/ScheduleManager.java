@@ -5,7 +5,7 @@ class ScheduleManager implements ScheduleInterface {
     @Override
     public void setSchedule(String schedule) {
         this.schedule = schedule;
-        System.out.println("Schedule set: " + schedule);
+        System.out.println("Расписание установлено: " + schedule);
     }
 
     @Override

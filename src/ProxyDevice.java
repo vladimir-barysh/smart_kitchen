@@ -11,22 +11,22 @@ class ProxyDevice implements Device {
     private void initializeDevice() {
         if (realDevice == null) {
             switch (deviceType) {
-                case "Stove":
+                case "Плита":
                     realDevice = new Stove();
                     break;
-                case "CoffeeMachine":
+                case "Кофемашина":
                     realDevice = new CoffeeMachine();
                     break;
-                case "Fridge":
+                case "Холодильник":
                     realDevice = new Fridge();
                     break;
-                case "Kettle":
+                case "Чайник":
                     realDevice = new Kettle();
                     break;
-                case "Microwave":
+                case "Микроволновка":
                     realDevice = new Microwave();
                     break;
-                case "Oven":
+                case "Духовка":
                     realDevice = new Oven();
                     break;
                 // Добавить другие типы устройств

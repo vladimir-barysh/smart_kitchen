@@ -1,7 +1,7 @@
 public class CoffeeMachine implements Device{
     private boolean isOn = false;
-    private int waterLevel = 200; // Уровень воды в мл (максимум 1000 мл)
-    private int coffeeLevel = 50; // Количество кофе в г (максимум 200 г)
+    private int waterLevel = 200; // Уровень воды в мл
+    private int coffeeLevel = 50; // Количество кофе в г
     private static final int WATER_PER_COFFEE = 100; // 100 мл воды на чашку
     private static final int COFFEE_PER_COFFEE = 10; // 10 г кофе на чашку
 
@@ -9,35 +9,35 @@ public class CoffeeMachine implements Device{
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Coffee machine turned ON");
+        System.out.println("Кофемашина включается...");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Coffee machine turned OFF");
+        System.out.println("Кофемашина выключается...");
     }
 
     @Override
     public String getStatus() {
-        return "CoffeeMachine is " + (isOn ? "ON" : "OFF") +
-                ", Water: " + waterLevel + "ml, Coffee: " + coffeeLevel + "g";
+        return "Кофемашина " + (isOn ? "включена" : "выключена") +
+                ", Количество воды: " + waterLevel + "мл, Количество кофе: " + coffeeLevel + "г";
     }
 
     @Override
     public String makeCoffee(){
         if (!isOn) {
-            return "Error: CoffeeMachine is OFF";
+            return "Ошибка: кофемашина выключена";
         }
         if (waterLevel < WATER_PER_COFFEE) {
-            return "Error: Not enough water (" + waterLevel + "ml available, " + WATER_PER_COFFEE + "ml needed)";
+            return "Ошибка: не хватает воды (" + waterLevel + "мл доступно, " + WATER_PER_COFFEE + "мл не хватает)";
         }
         if (coffeeLevel < COFFEE_PER_COFFEE) {
-            return "Error: Not enough coffee (" + coffeeLevel + "g available, " + COFFEE_PER_COFFEE + "g needed)";
+            return "Ошибка: не хватает кофе (" + coffeeLevel + "г доступно, " + COFFEE_PER_COFFEE + "г не хватает)";
         }
 
         waterLevel -= WATER_PER_COFFEE;
         coffeeLevel -= COFFEE_PER_COFFEE;
-        return "Coffee prepared successfully! Remaining: Water " + waterLevel + "ml, Coffee " + coffeeLevel + "g";
+        return "Кофе успешно приготовлено! Остаток: Воды " + waterLevel + "мл, Кофе " + coffeeLevel + "г";
     }
 }

@@ -34,12 +34,12 @@ class CentralController {
     }
 
     public void executeSchedule() {
-        System.out.println("Executing schedule: " + schedule.getSchedule());
+        System.out.println("Получение расписания: " + schedule.getSchedule());
     }
 
     public void sendAlert() {
         if (!Objects.equals(checker.reportStatus(devices), "0")){
-            System.out.println("Alert!!!\n" + checker.reportStatus(devices));
+            System.out.println("ВНИМАНИЕ!!!\n" + checker.reportStatus(devices));
         }
 
     }
@@ -50,6 +50,6 @@ class CentralController {
                 return device.makeCoffee();
             }
         }
-        return "Error: CoffeeMachine not found";
+        return "Ошибка: кофемашина не найдена.";
     }
 }

@@ -10,7 +10,7 @@ class DeviceChecker implements Checker {
 
     @Override
     public String checkAvailability() {
-        return "Checking availability of components...";
+        return "Проверка доступности компонентов...";
     }
 
     @Override
@@ -20,14 +20,16 @@ class DeviceChecker implements Checker {
 
         for (ProxyDevice device : controller.getDevices()) {
             String status = device.getStatus();
-            if (status.contains("CoffeeMachine")) {
+            if (status.contains("Кофемашина")) {
                 // Проверяем уровень воды и кофе для кофемашины
-                if (status.contains("Water: 0ml") || status.contains("Water: ") && Integer.parseInt(status.split("Water: ")[1].split("ml")[0]) < 100) {
-                    report.append("CoffeeMachine: Insufficient water level\n");
+                if (status.contains("Количество воды: 0мл") || status.contains("Количество воды: ") &&
+                        Integer.parseInt(status.split("Количество воды: ")[1].split("мл")[0]) < 100) {
+                    report.append("Кофемашина: недостаточно воды\n");
                     allComponentsOk = false;
                 }
-                if (status.contains("Coffee: 0g") || status.contains("Coffee: ") && Integer.parseInt(status.split("Coffee: ")[1].split("g")[0]) < 10) {
-                    report.append("CoffeeMachine: Insufficient coffee level\n");
+                if (status.contains("Количество кофе: 0г") || status.contains("Количество кофе: ") &&
+                        Integer.parseInt(status.split("Количество кофе: ")[1].split("г")[0]) < 10) {
+                    report.append("Кофемашина: недостаточно воды\n");
                     allComponentsOk = false;
                 }
             }
