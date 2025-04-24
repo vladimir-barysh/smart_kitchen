@@ -1,20 +1,20 @@
-public class Fridge implements Device{
+public class Kettle implements Device{
     private boolean isOn = false;
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Fridge turned ON");
+        System.out.println("Kettle turned ON");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Fridge turned OFF");
+        System.out.println("Kettle turned OFF");
     }
 
     @Override
     public String getStatus() {
-        return "Fridge is " + (isOn ? "ON" : "OFF");
+        return "Kettle is " + (isOn ? "ON" : "OFF");
     }
 }

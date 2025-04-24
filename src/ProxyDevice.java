@@ -1,31 +1,69 @@
-public class ProxyDevice implements Device {
+// Прокси для устройства
+class ProxyDevice implements Device {
     private Device realDevice;
-    private DeviceChecker checker;
+    private String cachedStatus;
+    private String deviceType;
 
-    public ProxyDevice(Device realDevice, DeviceChecker checker) {
-        this.realDevice = realDevice;
-        this.checker = checker;
+    public ProxyDevice(String deviceType) {
+        this.deviceType = deviceType;
     }
 
+    private void initializeDevice() {
+        if (realDevice == null) {
+            switch (deviceType) {
+                case "Stove":
+                    realDevice = new Stove();
+                    break;
+                case "CoffeeMachine":
+                    realDevice = new CoffeeMachine();
+                    break;
+                case "Fridge":
+                    realDevice = new Fridge();
+                    break;
+                case "Kettle":
+                    realDevice = new Kettle();
+                    break;
+                case "Microwave":
+                    realDevice = new Microwave();
+                    break;
+                case "Oven":
+                    realDevice = new Oven();
+                    break;
+                // Добавить другие типы устройств
+                default:
+                    throw new IllegalArgumentException("Unknown device type");
+            }
+        }
+    }
+
+    @Override
+    public String getStatus() {
+        if (cachedStatus == null) {
+            initializeDevice();
+            cachedStatus = realDevice.getStatus();
+        }
+        return cachedStatus;
+    }
+
+    @Override
     public void turnOn() {
-        System.out.println("[LOG] Turning on " + realDevice.getName());
+        initializeDevice();
         realDevice.turnOn();
+        cachedStatus = realDevice.getStatus();
     }
 
+    @Override
     public void turnOff() {
-        System.out.println("[LOG] Turning off " + realDevice.getName());
+        initializeDevice();
         realDevice.turnOff();
+        cachedStatus = realDevice.getStatus();
     }
 
-    public boolean getStatus() {
-        return realDevice.getStatus();
-    }
-
-    public String getName() {
-        return realDevice.getName();
-    }
-
-    public String checkStatus() {
-        return checker.check(realDevice);
+    @Override
+    public String makeCoffee() {
+        initializeDevice();
+        String result = realDevice.makeCoffee();
+        cachedStatus = realDevice.getStatus();
+        return result;
     }
 }

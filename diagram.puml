@@ -1,0 +1,115 @@
+@startuml
+interface Device {
+    +getStatus()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+}
+
+class Stove {
+    -isOn: boolean
+    +getStatus()
+    +turnOn()
+    +turnOff()
+}
+
+class Oven {
+    -isOn: boolean
+    +getStatus()
+    +turnOn()
+    +turnOff()
+}
+
+class Fridge {
+    -isOn: boolean
+    +getStatus()
+    +turnOn()
+    +turnOff()
+}
+
+class Microwave {
+    -isOn: boolean
+    +getStatus()
+    +turnOn()
+    +turnOff()
+}
+
+class Kettle {
+    -isOn: boolean
+    +getStatus()
+    +turnOn()
+    +turnOff()
+}
+
+class CoffeeMachine {
+    -isOn: boolean
+    -int: waterLevel
+    -int: coffeeLevel
+    +getStatus()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+}
+
+class ProxyDevice {
+    -realDevice: Device
+    -cachedStatus: String
+    -deviceType: String
+    +ProxyDevice()
+    +initializeDevice()
+    +getStatus()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+}
+
+interface Checker {
+    +checkAvailability()
+    +reportStatus()
+}
+
+class DeviceChecker {
+    -controller: CentralController
+    +DeviceChecker()
+    +checkAvailability()
+    +reportStatus()
+}
+
+interface ScheduleInterface {
+    +setSchedule()
+    +getSchedule()
+}
+
+class ScheduleManager {
+    -schedule: String
+    +setSchedule()
+    +getSchedule()
+}
+
+class CentralController {
+    -devices: List<DeviceProxy>
+    -checker: Checker
+    -schedule: ScheduleInterface
+    +CentralController()
+    +addDevice()
+    +getDevice()
+    +checkDevices()
+    +addSchedule()
+    +executeSchedule()
+    +sendAlert()
+    +makeCoffee()
+}
+
+Device <|.. Stove
+Device <|.. Oven
+Device <|.. Fridge
+Device <|.. Microwave
+Device <|.. Kettle
+Device <|.. CoffeeMachine
+Device <|.. ProxyDevice
+Checker <|.. DeviceChecker
+ScheduleInterface <|.. ScheduleManager
+CentralController o--> "many" ProxyDevice
+CentralController o--> DeviceChecker
+CentralController o--> ScheduleManager
+@enduml

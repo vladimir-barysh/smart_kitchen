@@ -1,6 +1,8 @@
 public interface Device {
     void turnOn();
     void turnOff();
-    boolean getStatus();
-    String getName();
+    String getStatus();
+    default String makeCoffee() {
+        return "Not supported";
+    }
 }
