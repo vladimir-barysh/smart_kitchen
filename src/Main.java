@@ -5,10 +5,12 @@ public class Main {
         ProxyDevice kettleProxy = new ProxyDevice("Чайник");
         ProxyDevice stoveProxy = new ProxyDevice("Плита");
         ProxyDevice ovenProxy = new ProxyDevice("Духовка");
+        ProxyDevice fridgeProxy = new ProxyDevice("Холодильник");
         controller.addDevice(coffeeProxy);
         controller.addDevice(kettleProxy);
         controller.addDevice(stoveProxy);
         controller.addDevice(ovenProxy);
+        controller.addDevice(fridgeProxy);
 
         // Установка расписания
         System.out.println("-=Setting schedule=-");

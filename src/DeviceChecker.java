@@ -37,6 +37,27 @@ class DeviceChecker implements Checker {
                     report.append("Чайник: недостаточно воды\n");
                     allComponentsOk = false;
                 }
+            }else if (status.contains("Холодильник")){
+                int milkCount = parseValue(status, "пачек молока - ", " шт");
+                int eggsCount = parseValue(status, "яиц - ", " шт");
+                int tomatoesCount = parseValue(status, "помидоров - ", " шт");
+                int breadCount = parseValue(status, "кусков хлеба - ", " шт");
+                if (milkCount < 1){
+                    report.append("Холодильник: мало молока\n");
+                    allComponentsOk = false;
+                }
+                if (eggsCount < 3){
+                    report.append("Холодильник: мало яиц\n");
+                    allComponentsOk = false;
+                }
+                if (tomatoesCount < 2){
+                    report.append("Холодильник: мало помидоров\n");
+                    allComponentsOk = false;
+                }
+                if (breadCount < 4) {
+                    report.append("Холодильник: мало хлеба\n");
+                    allComponentsOk = false;
+                }
             }
         }
 
