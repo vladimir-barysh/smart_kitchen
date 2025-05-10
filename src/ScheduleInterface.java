@@ -1,5 +1,8 @@
+import java.util.List;
+
 // Интерфейс расписания
 interface ScheduleInterface {
-    void setSchedule(String schedule);
-    String getSchedule();
+    void setSchedule(Task task);
+    void updateSchedule(Task task);
+    List<Task> getSchedule();
 }

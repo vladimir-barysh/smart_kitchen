@@ -1,6 +1,6 @@
 public class CoffeeMachine implements Device{
     private boolean isOn = false;
-    private int waterLevel = 200; // Уровень воды в мл
+    private int waterLevel = 1000; // Уровень воды в мл
     private int coffeeLevel = 50; // Количество кофе в г
     private static final int WATER_PER_COFFEE = 100; // 100 мл воды на чашку
     private static final int COFFEE_PER_COFFEE = 10; // 10 г кофе на чашку
@@ -9,22 +9,26 @@ public class CoffeeMachine implements Device{
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Кофемашина включается...");
+        System.out.println("Включаю кофемашину...");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Кофемашина выключается...");
+        System.out.println("Включаю кофемашину...");
     }
 
     @Override
     public String getStatus() {
         return "Кофемашина " + (isOn ? "включена" : "выключена") +
-                ", Количество воды: " + waterLevel + "мл, Количество кофе: " + coffeeLevel + "г";
+                ", количество воды - " + waterLevel + "мл, количество кофе - " + coffeeLevel + "г";
     }
 
     @Override
+    public String getDeviceType(){
+        return "Кофемашина";
+    }
+
     public String makeCoffee(){
         if (!isOn) {
             return "Ошибка: кофемашина выключена";

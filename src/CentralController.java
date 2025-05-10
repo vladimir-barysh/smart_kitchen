@@ -5,6 +5,7 @@ import java.util.Objects;
 // Центральный контроллер
 class CentralController {
     private List<ProxyDevice> devices;
+    private Receipt receipt;
     private Checker checker;
     private ScheduleInterface schedule;
 
@@ -12,13 +13,17 @@ class CentralController {
         devices = new ArrayList<>();
         checker = new DeviceChecker(this);
         schedule = new ScheduleManager();
+        receipt = new Receipt();
     }
 
     public void addDevice(ProxyDevice device) {
-        devices.add(device);
+        if (device != null) {
+            devices.add(device);
+            receipt.addDevice(device); // Гарантируем синхронизацию
+            System.out.println("//Следующее устройство было добавлено в систему: " + device.getDeviceType()+"//");
+        }
     }
-
-    public List<ProxyDevice> getDevices() {
+    public List<ProxyDevice> getDevices(){
         return devices;
     }
 
@@ -29,27 +34,28 @@ class CentralController {
         }
     }
 
-    public void addSchedule(ScheduleInterface schedule){
+    public void setSchedule(ScheduleInterface schedule) {
         this.schedule = schedule;
+        System.out.println("//Расписание сохранено//");
     }
 
-    public void executeSchedule() {
-        System.out.println("Получение расписания: " + schedule.getSchedule());
+    public void executeSchedule(String currentTime) {
+        System.out.println("//Проверка соответствующего расписания на: " + currentTime + " //");
+        List<Task> tasks = ((ScheduleManager) schedule).getSchedule();
+        for (Task task : tasks) {
+            if (task.getTime().equals(currentTime)) {
+                task.execute(receipt);
+            }
+        }
     }
 
     public void sendAlert() {
-        if (!Objects.equals(checker.reportStatus(devices), "0")){
-            System.out.println("ВНИМАНИЕ!!!\n" + checker.reportStatus(devices));
+        String result = new String(checker.reportStatus());
+        if (!Objects.equals(result, "Все компоненты в норме")){
+            System.out.println("ВНИМАНИЕ!!!\n" + result);
         }
-
-    }
-
-    public String makeCoffee(String deviceType) {
-        for (ProxyDevice device : devices) {
-            if (device.getStatus().contains(deviceType)) {
-                return device.makeCoffee();
-            }
+        else {
+            System.out.println(result);
         }
-        return "Ошибка: кофемашина не найдена.";
     }
 }

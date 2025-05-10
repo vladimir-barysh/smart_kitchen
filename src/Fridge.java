@@ -1,20 +1,24 @@
 public class Fridge implements Device{
-    private boolean isOn = false;
+    private boolean isOn = true;
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Fridge turned ON");
+        System.out.println("Холодильник включается...");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Fridge turned OFF");
+        System.out.println("Холодильник выключается...");
     }
 
     @Override
     public String getStatus() {
-        return "Fridge is " + (isOn ? "ON" : "OFF");
+        return "Холодильник " + (isOn ? "включен" : "выключен");
+    }
+    @Override
+    public String getDeviceType(){
+        return "Холодильник";
     }
 }

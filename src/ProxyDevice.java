@@ -23,9 +23,6 @@ class ProxyDevice implements Device {
                 case "Чайник":
                     realDevice = new Kettle();
                     break;
-                case "Микроволновка":
-                    realDevice = new Microwave();
-                    break;
                 case "Духовка":
                     realDevice = new Oven();
                     break;
@@ -34,15 +31,6 @@ class ProxyDevice implements Device {
                     throw new IllegalArgumentException("Unknown device type");
             }
         }
-    }
-
-    @Override
-    public String getStatus() {
-        if (cachedStatus == null) {
-            initializeDevice();
-            cachedStatus = realDevice.getStatus();
-        }
-        return cachedStatus;
     }
 
     @Override
@@ -60,9 +48,43 @@ class ProxyDevice implements Device {
     }
 
     @Override
+    public String getStatus() {
+        if (cachedStatus == null) {
+            initializeDevice();
+            cachedStatus = realDevice.getStatus();
+        }
+        return cachedStatus;
+    }
+
+    @Override
+    public String getDeviceType(){
+        return deviceType;
+    }
+    @Override
     public String makeCoffee() {
         initializeDevice();
         String result = realDevice.makeCoffee();
+        cachedStatus = realDevice.getStatus();
+        return result;
+    }
+    @Override
+    public String boilWater(){
+        initializeDevice();
+        String result = realDevice.boilWater();
+        cachedStatus = realDevice.getStatus();
+        return result;
+    }
+    @Override
+    public String heatStove(int temperature) {
+        initializeDevice();
+        String result = realDevice.heatStove(temperature);
+        cachedStatus = realDevice.getStatus();
+        return result;
+    }
+    @Override
+    public String heatOven(int timeMin, int temperature){
+        initializeDevice();
+        String result = realDevice.heatOven(timeMin, temperature);
         cachedStatus = realDevice.getStatus();
         return result;
     }

@@ -27,13 +27,6 @@ class Fridge {
     +turnOff()
 }
 
-class Microwave {
-    -isOn: boolean
-    +getStatus()
-    +turnOn()
-    +turnOff()
-}
-
 class Kettle {
     -isOn: boolean
     +getStatus()
@@ -103,7 +96,6 @@ class CentralController {
 Device <|.. Stove
 Device <|.. Oven
 Device <|.. Fridge
-Device <|.. Microwave
 Device <|.. Kettle
 Device <|.. CoffeeMachine
 Device <|.. ProxyDevice
