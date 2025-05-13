@@ -6,29 +6,38 @@ interface Device {
     +getDeviceType()
     +makeCoffee()
     +boilWater()
-    +heatStove()
-    +heatOven()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
 }
 
 class Stove {
     -isOn: boolean
+    -currentTemperature: int
     +getStatus()
     +turnOn()
     +turnOff()
+    +heatStove(int temperature)
 }
 
 class Oven {
     -isOn: boolean
+    -currentTemperature: int
+    -remainingMinutes: int
     +getStatus()
     +turnOn()
     +turnOff()
+    +heatOven(int temperature, int minutes)
 }
 
 class Fridge {
     -isOn: boolean
+    +milk: int
+    +eggs: int
     +getStatus()
     +turnOn()
     +turnOff()
+    +checkProducts()
 }
 
 class Kettle {
@@ -37,7 +46,6 @@ class Kettle {
     +getStatus()
     +turnOn()
     +turnOff()
-    +getDeviceType()
     +boilWater()
 }
 
@@ -54,13 +62,17 @@ class CoffeeMachine {
 class ProxyDevice {
     -realDevice: Device
     -cachedStatus: String
-    -deviceType: String
     +ProxyDevice()
     +initializeDevice()
     +getStatus()
     +turnOn()
     +turnOff()
     +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+    +getDeviceType()
 }
 
 interface Checker {
@@ -70,10 +82,10 @@ interface Checker {
 
 class DeviceChecker {
     -controller: CentralController
-    +DeviceChecker()
     +checkAvailability()
     +reportStatus()
     +parseValue()
+    +setController(controller: CentralController)
 }
 
 interface ScheduleInterface {
@@ -82,7 +94,7 @@ interface ScheduleInterface {
 }
 
 class ScheduleManager {
-    -schedule: String
+    -tasks: List<Task>
     +setSchedule()
     +getSchedule()
 }
@@ -92,8 +104,7 @@ class CentralController {
     -checker: Checker
     -schedule: ScheduleInterface
     -receipt: Receipt
-    +CentralController()
-    +addDevice()
+    +addDevice(device: ProxyDevice)
     +getDevices()
     +checkDevices()
     +setSchedule()
@@ -101,6 +112,33 @@ class CentralController {
     +sendAlert()
 }
 
+class Task {
+    -time: String
+    -action: String
+    -temperature: int
+    -minutes: int
+    +getTime()
+    +getAction()
+    +execute(receipt: Receipt)
+}
+
+class Receipt {
+    -devices: Map<String, ProxyDevice>
+    +addDevice(device: ProxyDevice)
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+}
+
+class ActionConstants{
+    +MAKE_COFFEE: String
+    +BOIL_WATER: String
+    +HEAT_STOVE: String
+    +HEAT_OVEN: String
+    +CHECK_PRODUCTS: String
+}
 Device <|.. Stove
 Device <|.. Oven
 Device <|.. Fridge
@@ -112,4 +150,7 @@ ScheduleInterface <|.. ScheduleManager
 CentralController o--> "many" ProxyDevice
 CentralController o--> DeviceChecker
 CentralController o--> ScheduleManager
+CentralController o--> Receipt
+ScheduleManager o--> "many" Task
+
 @enduml
