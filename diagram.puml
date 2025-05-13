@@ -3,7 +3,11 @@ interface Device {
     +getStatus()
     +turnOn()
     +turnOff()
+    +getDeviceType()
     +makeCoffee()
+    +boilWater()
+    +heatStove()
+    +heatOven()
 }
 
 class Stove {
@@ -29,9 +33,12 @@ class Fridge {
 
 class Kettle {
     -isOn: boolean
+    -waterLevel: int
     +getStatus()
     +turnOn()
     +turnOff()
+    +getDeviceType()
+    +boilWater()
 }
 
 class CoffeeMachine {
@@ -66,6 +73,7 @@ class DeviceChecker {
     +DeviceChecker()
     +checkAvailability()
     +reportStatus()
+    +parseValue()
 }
 
 interface ScheduleInterface {
@@ -83,14 +91,14 @@ class CentralController {
     -devices: List<DeviceProxy>
     -checker: Checker
     -schedule: ScheduleInterface
+    -receipt: Receipt
     +CentralController()
     +addDevice()
-    +getDevice()
+    +getDevices()
     +checkDevices()
-    +addSchedule()
+    +setSchedule()
     +executeSchedule()
     +sendAlert()
-    +makeCoffee()
 }
 
 Device <|.. Stove

@@ -23,6 +23,9 @@ class Receipt {
             case "Oven":
                 deviceType = "Духовка";
                 break;
+            case "Холодильник":
+                deviceType = "Холодильник";
+                break;
             default:
                 throw new IllegalArgumentException("Unknown device type: " + device.getDeviceType());
         }
