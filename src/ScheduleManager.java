@@ -15,13 +15,6 @@ class ScheduleManager implements ScheduleInterface {
     }
 
     @Override
-    public void updateSchedule(Task task) {
-        tasks.removeIf(t -> t.getAction().equals(task.getAction()));
-        tasks.add(task);
-        System.out.println("Task updated: " + task.getAction() + " at " + task.getTime());
-    }
-
-    @Override
     public List<Task> getSchedule() {
         return tasks;
     }
