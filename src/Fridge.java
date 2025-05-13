@@ -1,25 +1,32 @@
-import java.util.List;
-
-public class Fridge implements Device{
+class Fridge implements Device {
     private boolean isOn = true;
-    private int milkCount = 3;
-    private int eggsCount = 10;
-    private int tomatoesCount = 4;
-    private int breadCount = 1;
+    private int milk = 500; // Количество молока в мл
+    private int eggs = 1;  // Количество яиц
+
+    @Override
+    public String getStatus() {
+        return "Холодильник " + (isOn ? "включен" : "выключен") + ", молока - " + milk + "мл, яиц - " + eggs + "шт";
+    }
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Холодильник включается...");
+        System.out.println("Включаю холодильник...");
     }
+
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Холодильник выключается...");
+        System.out.println("Выключаю холодильник...");
     }
+
     @Override
-    public String getStatus() {
-        return "Холодильник " + (isOn ? "включен" : "выключен") + ", пачек молока - " + milkCount + " шт, яиц - "
-                + eggsCount + " шт, помидоров - " + tomatoesCount + " шт, кусков хлеба - " + breadCount + " шт";
+    public String checkProducts() {
+        if (!isOn) return "Ошибка: холодильник выключен";
+        StringBuilder status = new StringBuilder("В холодильнике: ");
+        status.append("молока - ").append(milk).append("мл, яиц - ").append(eggs).append("шт");
+        if (milk < 200) status.append(" (Мало молока!)");
+        if (eggs < 2) status.append(" (Недостаточно яиц!)");
+        return status.toString();
     }
 }

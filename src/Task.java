@@ -28,7 +28,7 @@ class Task {
     }
 
     public void execute(Receipt receipt) {
-        System.out.println("Executing task at " + time + ": " + action);
+        System.out.println("Получение расписания: " + time + " - " + action);
         switch (action) {
             case ActionConstants.MAKE_COFFEE:
                 receipt.makeCoffee();
@@ -41,6 +41,9 @@ class Task {
                 break;
             case ActionConstants.HEAT_OVEN:
                 receipt.heatOven(temperature, minutes);
+                break;
+            case ActionConstants.CHECK_PRODUCTS:
+                receipt.checkProducts();
                 break;
             default:
                 System.out.println("Unknown action: " + action);

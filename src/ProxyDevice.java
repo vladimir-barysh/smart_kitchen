@@ -57,4 +57,11 @@ class ProxyDevice implements Device {
         cachedStatus = realDevice.getStatus();
         return result;
     }
+
+    @Override
+    public String checkProducts() {
+        String result = realDevice.checkProducts();
+        cachedStatus = realDevice.getStatus();
+        return result;
+    }
 }

@@ -4,27 +4,27 @@ class Stove implements Device {
 
     @Override
     public String getStatus() {
-        return "Stove is " + (isOn ? "ON" : "OFF") + ", Temperature: " + currentTemperature + "C";
+        return "Плита " + (isOn ? "включена" : "выключена") + ", температура - " + currentTemperature + "C";
     }
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Stove turned ON");
+        System.out.println("Включаю плиту...");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
         currentTemperature = 0;
-        System.out.println("Stove turned OFF");
+        System.out.println("Выключаю плиту...");
     }
 
     @Override
     public String heatStove(int temperature) {
-        if (!isOn) return "Error: Stove is OFF";
-        if (temperature < 0 || temperature > 300) return "Error: Invalid temperature (0-300C)";
+        if (!isOn) return "Ошибка: плита выключена";
+        if (temperature < 0 || temperature > 300) return "Ошибка: недопустимая температура (0-300C)";
         currentTemperature = temperature;
-        return "Stove heated to " + temperature + "C";
+        return "Плита разогрета до " + temperature + "C";
     }
 }

@@ -12,35 +12,56 @@ public class Main {
         Device kettle = new Kettle();
         Device stove = new Stove();
         Device oven = new Oven();
+        Device fridge = new Fridge();
 
         ProxyDevice coffeeProxy = new ProxyDevice(coffeeMachine);
         ProxyDevice kettleProxy = new ProxyDevice(kettle);
         ProxyDevice stoveProxy = new ProxyDevice(stove);
         ProxyDevice ovenProxy = new ProxyDevice(oven);
+        ProxyDevice fridgeProxy = new ProxyDevice(fridge);
 
         // Добавление устройств
         controller.addDevice(coffeeProxy);
         controller.addDevice(kettleProxy);
         controller.addDevice(stoveProxy);
         controller.addDevice(ovenProxy);
+        controller.addDevice(fridgeProxy);
 
         // Установка расписания
         schedule.setSchedule(new Task("06:00", ActionConstants.MAKE_COFFEE));
         schedule.setSchedule(new Task("07:00", ActionConstants.BOIL_WATER));
-        schedule.setSchedule(new Task("08:00", ActionConstants.HEAT_STOVE, 200)); // Нагреть плиту до 200°C
-        schedule.setSchedule(new Task("09:00", ActionConstants.HEAT_OVEN, 180, 30)); // Нагреть духовку до 180°C на 30 минут
+        schedule.setSchedule(new Task("08:00", ActionConstants.HEAT_STOVE, 200));
+        schedule.setSchedule(new Task("09:00", ActionConstants.HEAT_OVEN, 180, 30));
+        schedule.setSchedule(new Task("20:00", ActionConstants.CHECK_PRODUCTS));
 
         // Проверка состояния устройств
+        System.out.println("\n-=Проверка устройств=-\n");
         controller.checkDevices();
 
-        // Выполнение расписания для 8 утра (нагрев плиты)
+        // Выполнение расписания для 6 утра (приготовить кофе)
+        System.out.println("\n-=06:00=-\n");
+        controller.executeSchedule("06:00");
+
+        // Выполнение расписания для 7 утра (вскипятить воду)
+        System.out.println("\n-=07:00=-\n");
+        controller.executeSchedule("07:00");
+
+        // Выполнение расписания для 8 утра (нагреть плиту)
+        System.out.println("\n-=08:00=-\n");
         controller.executeSchedule("08:00");
 
-        // Выполнение расписания для 9 утра (нагрев духовки)
+        // Выполнение расписания для 9 утра (включить духовку)
+        System.out.println("\n-=09:00=-\n");
         controller.executeSchedule("09:00");
 
+        // Выполнение расписания для 20:00 (проверить продукты)
+        System.out.println("\n-=20:00=-\n");
+        controller.executeSchedule("20:00");
+
         // Проверка состояния и отчет
+        System.out.println("\n-=Проверка устройств=-\n");
         controller.checkDevices();
+        System.out.println("\n-=Неполадки=-\n");
         controller.sendAlert();
     }
 }

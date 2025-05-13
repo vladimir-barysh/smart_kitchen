@@ -5,13 +5,13 @@ class Oven implements Device {
 
     @Override
     public String getStatus() {
-        return "Oven is " + (isOn ? "ON" : "OFF") + ", Temperature: " + currentTemperature + "C, Time remaining: " + remainingMinutes + "min";
+        return "Духовка " + (isOn ? "включена" : "выключена") + ", температура - " + currentTemperature + "C, таймер - " + remainingMinutes + "мин";
     }
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Oven turned ON");
+        System.out.println("Включаю духовку...");
     }
 
     @Override
@@ -19,16 +19,16 @@ class Oven implements Device {
         isOn = false;
         currentTemperature = 0;
         remainingMinutes = 0;
-        System.out.println("Oven turned OFF");
+        System.out.println("Выключаю духовку...");
     }
 
     @Override
     public String heatOven(int temperature, int minutes) {
-        if (!isOn) return "Error: Oven is OFF";
-        if (temperature < 0 || temperature > 250) return "Error: Invalid temperature (0-250C)";
-        if (minutes <= 0) return "Error: Invalid time (must be > 0)";
+        if (!isOn) return "Ошибка: духовка выключена";
+        if (temperature < 0 || temperature > 250) return "Ошибка: недопустимая температура (0-250C)";
+        if (minutes <= 0) return "Ошибка: недопустимое время (должно быть > 0)";
         currentTemperature = temperature;
         remainingMinutes = minutes;
-        return "Oven heated to " + temperature + "C for " + minutes + " minutes";
+        return "Духовка разогрета до " + temperature + "C на " + minutes + " минут";
     }
 }

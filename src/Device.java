@@ -10,4 +10,7 @@ public interface Device {
     }
     default String heatStove(int temperature){return "Not supported";}
     default String heatOven(int temperature, int minutes) {return "Not supported";}
+    default String checkProducts() {
+        return "Not supported";
+    }
 }

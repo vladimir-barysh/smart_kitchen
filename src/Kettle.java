@@ -5,26 +5,26 @@ class Kettle implements Device {
 
     @Override
     public String getStatus() {
-        return "Kettle is " + (isOn ? "ON" : "OFF") + ", Water: " + waterLevel + "ml";
+        return "Чайник " + (isOn ? "включен" : "выключен") + ", воды - " + waterLevel + "мл";
     }
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Kettle turned ON");
+        System.out.println("Включаю чайник...");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Kettle turned OFF");
+        System.out.println("Выключаю чайник...");
     }
 
     @Override
     public String boilWater() {
-        if (!isOn) return "Error: Kettle is OFF";
-        if (waterLevel < WATER_PER_BOIL) return "Error: Not enough water";
+        if (!isOn) return "Ошибка: чайник выключен";
+        if (waterLevel < WATER_PER_BOIL) return "Ошибка: недостаточно воды";
         waterLevel -= WATER_PER_BOIL;
-        return "Water boiled successfully!";
+        return "Вода успешно вскипятилась!";
     }
 }

@@ -27,10 +27,10 @@ class CentralController {
     }
 
     public void checkDevices() {
+        System.out.println(checker.checkAvailability());
         for (ProxyDevice device : devices) {
             System.out.println(device.getStatus());
         }
-        System.out.println(checker.checkAvailability());
     }
 
     public void executeSchedule(String currentTime) {
@@ -41,10 +41,9 @@ class CentralController {
                 task.execute(receipt);
             }
         }
-        checkDevices();
     }
 
     public void sendAlert() {
-        System.out.println("Alert: " + checker.reportStatus());
+        System.out.println(checker.reportStatus());
     }
 }

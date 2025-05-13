@@ -23,14 +23,13 @@ class Receipt {
             case "Oven":
                 deviceType = "Духовка";
                 break;
-            case "Холодильник":
+            case "Fridge":
                 deviceType = "Холодильник";
                 break;
             default:
                 throw new IllegalArgumentException("Unknown device type: " + device.getDeviceType());
         }
         devices.put(deviceType, device);
-        System.out.println("Device added to Receipt: " + deviceType);
     }
 
     public String makeCoffee() {
@@ -90,6 +89,19 @@ class Receipt {
         String result = oven.heatOven(temperature, minutes);
         System.out.println(result);
         oven.turnOff();
+        return result;
+    }
+
+    public String checkProducts() {
+        ProxyDevice fridge = devices.get("Холодильник");
+        if (fridge == null) {
+            String result = "Ошибка: холодильник недоступен";
+            System.out.println(result);
+            return result;
+        }
+        System.out.println("Проверка содержимого холодильника:");
+        String result = fridge.checkProducts();
+        System.out.println(result);
         return result;
     }
 }
