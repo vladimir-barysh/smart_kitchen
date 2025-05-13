@@ -1,23 +1,22 @@
 class Task {
-    private String time; // Время выполнения (например, "06:00")
-    private String action; // Действие (например, "makeCoffee")
-    private int temperature;
-    private int heatTime;
+    private String time;
+    private String action;
+    private int temperature; // Для heatStove и heatOven
+    private int minutes;     // Для heatOven
 
     public Task(String time, String action) {
-        this.time = time;
-        this.action = action;
+        this(time, action, 0, 0);
     }
-    public Task(String time, String action, int temperature){
+
+    public Task(String time, String action, int temperature) {
+        this(time, action, temperature, 0);
+    }
+
+    public Task(String time, String action, int temperature, int minutes) {
         this.time = time;
         this.action = action;
         this.temperature = temperature;
-    }
-    public Task(String time, String action, int heatTimeMin, int temperature){
-        this.time = time;
-        this.action = action;
-        this.heatTime = heatTimeMin;
-        this.temperature = temperature;
+        this.minutes = minutes;
     }
 
     public String getTime() {
@@ -29,22 +28,22 @@ class Task {
     }
 
     public void execute(Receipt receipt) {
-        System.out.println("Получена задача: " + time + " - " + action);
+        System.out.println("Executing task at " + time + ": " + action);
         switch (action) {
-            case "Приготовить кофе":
+            case ActionConstants.MAKE_COFFEE:
                 receipt.makeCoffee();
                 break;
-            case "Вскипятить воду":
+            case ActionConstants.BOIL_WATER:
                 receipt.boilWater();
                 break;
-            case "Разогреть плиту":
+            case ActionConstants.HEAT_STOVE:
                 receipt.heatStove(temperature);
                 break;
-            case "Включить духовку":
-                receipt.heatOven(heatTime, temperature);
+            case ActionConstants.HEAT_OVEN:
+                receipt.heatOven(temperature, minutes);
                 break;
             default:
-                System.out.println("Неизвестная задача: " + action);
+                System.out.println("Unknown action: " + action);
         }
     }
 }

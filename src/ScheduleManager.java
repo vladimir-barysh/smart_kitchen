@@ -1,9 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-// Реализация менеджера расписания
 class ScheduleManager implements ScheduleInterface {
-    private String schedule;
     private List<Task> tasks;
 
     public ScheduleManager() {
@@ -13,14 +11,14 @@ class ScheduleManager implements ScheduleInterface {
     @Override
     public void setSchedule(Task task) {
         tasks.add(task);
-        System.out.println("Добавлена задача: " + task.getAction() + " в " + task.getTime());
+        System.out.println("Task added: " + task.getAction() + " at " + task.getTime());
     }
 
     @Override
     public void updateSchedule(Task task) {
         tasks.removeIf(t -> t.getAction().equals(task.getAction()));
         tasks.add(task);
-        System.out.println("Добавлена: " + task.getAction() + " задача " + task.getTime());
+        System.out.println("Task updated: " + task.getAction() + " at " + task.getTime());
     }
 
     @Override

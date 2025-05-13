@@ -1,40 +1,30 @@
-// Реализация чайника
 class Kettle implements Device {
     private boolean isOn = false;
-    private int waterLevel = 500; // Уровень воды в мл (максимум 1000 мл)
-    private static final int WATER_PER_BOIL = 200; // 200 мл воды на кипячение
+    private int waterLevel = 500;
+    private static final int WATER_PER_BOIL = 200;
 
     @Override
     public String getStatus() {
-        return "Чайник " + (isOn ? "включен" : "выключен") + ", количество воды - " + waterLevel + "мл";
+        return "Kettle is " + (isOn ? "ON" : "OFF") + ", Water: " + waterLevel + "ml";
     }
-    @Override
-    public String getDeviceType(){
-        return "Чайник";
-    }
+
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Включаю чайник...");
+        System.out.println("Kettle turned ON");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Выключаю чайник...");
+        System.out.println("Kettle turned OFF");
     }
 
     @Override
     public String boilWater() {
-        if (!isOn) {
-            return "Ошибка: чайник выключен";
-        }
-        if (waterLevel < WATER_PER_BOIL) {
-            return "Ошбика: недостаточно воды в чайнике (" + waterLevel + "мл доступно, " + WATER_PER_BOIL
-                    + "мл необходимо)";
-        }
-
-        waterLevel -= 1;
-        return "Вода вскипятилась! Осталось воды: " + waterLevel + "мл";
+        if (!isOn) return "Error: Kettle is OFF";
+        if (waterLevel < WATER_PER_BOIL) return "Error: Not enough water";
+        waterLevel -= WATER_PER_BOIL;
+        return "Water boiled successfully!";
     }
 }

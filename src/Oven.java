@@ -1,39 +1,34 @@
-public class Oven implements Device{
+class Oven implements Device {
     private boolean isOn = false;
+    private int currentTemperature = 0;
+    private int remainingMinutes = 0;
+
+    @Override
+    public String getStatus() {
+        return "Oven is " + (isOn ? "ON" : "OFF") + ", Temperature: " + currentTemperature + "C, Time remaining: " + remainingMinutes + "min";
+    }
 
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.println("Включаю духовку...");
+        System.out.println("Oven turned ON");
     }
 
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Выключаю духовку...");
+        currentTemperature = 0;
+        remainingMinutes = 0;
+        System.out.println("Oven turned OFF");
     }
+
     @Override
-    public String getStatus() {
-        return "Духовка " + (isOn ? "включена" : "выключена");
-    }
-    @Override
-    public String getDeviceType(){
-        return "Духовка";
-    }
-    public String heatOven(int timeMin, int temperature){
-        if (!isOn) {
-            return "Ошибка: духовка выключена";
-        }
-        if (temperature > 0 || temperature <= 100){
-            timeMin -= 2;
-        }
-        else if (temperature > 100 || temperature <= 200){
-            timeMin -= 3;
-        }
-        else if (temperature > 200){
-            timeMin -= 5;
-        }
-        else { return "Ошибка! Температура не может быть отрицательной!";}
-        return "Духовка успешно разогрета до " + temperature + " градусов! Осталось " + timeMin + " мин до выключения.";
+    public String heatOven(int temperature, int minutes) {
+        if (!isOn) return "Error: Oven is OFF";
+        if (temperature < 0 || temperature > 250) return "Error: Invalid temperature (0-250C)";
+        if (minutes <= 0) return "Error: Invalid time (must be > 0)";
+        currentTemperature = temperature;
+        remainingMinutes = minutes;
+        return "Oven heated to " + temperature + "C for " + minutes + " minutes";
     }
 }

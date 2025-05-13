@@ -1,10 +1,14 @@
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-// Реализация чекера
 class DeviceChecker implements Checker {
     private CentralController controller;
 
-    public DeviceChecker(CentralController controller) {
+    public DeviceChecker() {
+        // Пустой конструктор
+    }
+
+    public void setController(CentralController controller) {
         this.controller = controller;
     }
 
@@ -15,42 +19,31 @@ class DeviceChecker implements Checker {
 
     @Override
     public String reportStatus() {
-        StringBuilder report = new StringBuilder();
-        boolean allComponentsOk = true;
-
+        List<String> issues = new ArrayList<>();
         for (ProxyDevice device : controller.getDevices()) {
             String status = device.getStatus();
-            if (status.contains("Кофемашина")) {
-                int water = parseValue(status, "количество воды - ", "мл");
-                int coffee = parseValue(status, "количество кофе - ", "г");
-                if (water < 100) {
-                    report.append("Кофемашина: недостаточно воды\n");
-                    allComponentsOk = false;
-                }
-                if (coffee < 10) {
-                    report.append("Кофемашина: недостаточно кофе\n");
-                    allComponentsOk = false;
-                }
-            } else if (status.contains("Чайник")) {
-                int water = parseValue(status, "количество воды - ", "мл");
-                if (water < 200) {
-                    report.append("Чайник: недостаточно воды\n");
-                    allComponentsOk = false;
-                }
+            if (status.contains("CoffeeMachine")) {
+                int water = parseValue(status, "Water: ", "ml");
+                int coffee = parseValue(status, "Coffee: ", "g");
+                if (water < 100) issues.add("Кофемашина: недостаточно воды");
+                if (coffee < 10) issues.add("Кофемашина: недостаточно кофе");
+            } else if (status.contains("Kettle")) {
+                int water = parseValue(status, "Water: ", "ml");
+                if (water < 200) issues.add("Чайник: недостаточно воды");
+            } else if (status.contains("Stove")) {
+                if (status.contains("OFF")) issues.add("Плита: выключена");
+            } else if (status.contains("Oven")) {
+                if (status.contains("OFF")) issues.add("Духовка: выключена");
             }
         }
-
-        if (allComponentsOk) {
-            report.append("Все компоненты в норме");
-        }
-        String result = report.toString();
-        return result;
+        String report = issues.isEmpty() ? "Все компоненты в норме" : String.join("\n", issues);
+        System.out.println(report);
+        return report;
     }
 
     private int parseValue(String status, String prefix, String suffix) {
         try {
-            String value = status.split(prefix)[1].split(suffix)[0];
-            return Integer.parseInt(value);
+            return Integer.parseInt(status.split(prefix)[1].split(suffix)[0]);
         } catch (Exception e) {
             return 0;
         }

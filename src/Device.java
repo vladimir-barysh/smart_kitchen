@@ -2,7 +2,6 @@ public interface Device {
     void turnOn();
     void turnOff();
     String getStatus();
-    String getDeviceType();
     default String makeCoffee() {
         return "Not supported";
     }
@@ -10,5 +9,5 @@ public interface Device {
         return "Not supported";
     }
     default String heatStove(int temperature){return "Not supported";}
-    default String heatOven(int timeMin, int temperature) {return "Not supported";}
+    default String heatOven(int temperature, int minutes) {return "Not supported";}
 }

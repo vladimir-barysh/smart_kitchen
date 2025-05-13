@@ -1,42 +1,46 @@
 public class Main {
     public static void main(String[] args) {
-        CentralController controller = new CentralController();
-        ProxyDevice coffeeProxy = new ProxyDevice("Кофемашина");
-        ProxyDevice kettleProxy = new ProxyDevice("Чайник");
-        ProxyDevice stoveProxy = new ProxyDevice("Плита");
-        ProxyDevice ovenProxy = new ProxyDevice("Духовка");
+        // Конфигурирование системы
+        Receipt receipt = new Receipt();
+        ScheduleInterface schedule = new ScheduleManager();
+        DeviceChecker checker = new DeviceChecker();
+        CentralController controller = new CentralController(receipt, schedule, checker);
+        checker.setController(controller);
+
+        // Создание устройств и прокси
+        Device coffeeMachine = new CoffeeMachine();
+        Device kettle = new Kettle();
+        Device stove = new Stove();
+        Device oven = new Oven();
+
+        ProxyDevice coffeeProxy = new ProxyDevice(coffeeMachine);
+        ProxyDevice kettleProxy = new ProxyDevice(kettle);
+        ProxyDevice stoveProxy = new ProxyDevice(stove);
+        ProxyDevice ovenProxy = new ProxyDevice(oven);
+
+        // Добавление устройств
         controller.addDevice(coffeeProxy);
         controller.addDevice(kettleProxy);
         controller.addDevice(stoveProxy);
         controller.addDevice(ovenProxy);
 
         // Установка расписания
-        System.out.println("-=Setting schedule=-");
-        ScheduleManager schedule = new ScheduleManager();
-        schedule.setSchedule(new Task("06:00", "Приготовить кофе"));
-        schedule.setSchedule(new Task("06:00", "Вскипятить воду"));
-        schedule.setSchedule(new Task("15:00", "Включить духовку", 60, 200));
-        schedule.setSchedule(new Task("19:00", "Разогреть плиту", 190));
-        controller.setSchedule(schedule);
-        System.out.println();
+        schedule.setSchedule(new Task("06:00", ActionConstants.MAKE_COFFEE));
+        schedule.setSchedule(new Task("07:00", ActionConstants.BOIL_WATER));
+        schedule.setSchedule(new Task("08:00", ActionConstants.HEAT_STOVE, 200)); // Нагреть плиту до 200°C
+        schedule.setSchedule(new Task("09:00", ActionConstants.HEAT_OVEN, 180, 30)); // Нагреть духовку до 180°C на 30 минут
 
         // Проверка состояния устройств
-        System.out.println("-=Checking devices=-");
         controller.checkDevices();
-        System.out.println();
 
-        // Выполнение расписания для 6 утра
-        System.out.println("-=Executing schedule=-");
-        controller.executeSchedule("06:00");
-        controller.executeSchedule("15:00");
-        controller.executeSchedule("19:00");
-        System.out.println();
+        // Выполнение расписания для 8 утра (нагрев плиты)
+        controller.executeSchedule("08:00");
+
+        // Выполнение расписания для 9 утра (нагрев духовки)
+        controller.executeSchedule("09:00");
 
         // Проверка состояния и отчет
-        System.out.println("-=Checking devices=-");
         controller.checkDevices();
-        System.out.println();
-        System.out.println("-=Any alerts=-");
         controller.sendAlert();
     }
 }

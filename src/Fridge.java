@@ -17,8 +17,4 @@ public class Fridge implements Device{
     public String getStatus() {
         return "Холодильник " + (isOn ? "включен" : "выключен");
     }
-    @Override
-    public String getDeviceType(){
-        return "Холодильник";
-    }
 }
