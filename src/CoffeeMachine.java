@@ -19,7 +19,7 @@ class CoffeeMachine implements Device {
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Выключаю кофемашины...");
+        System.out.println("Выключаю кофемашину...");
     }
 
     @Override

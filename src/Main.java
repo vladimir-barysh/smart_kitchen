@@ -8,19 +8,23 @@ public class Main {
         checker.setController(controller);
 
         // Создание устройств и прокси
+        Device modernCoffeeMachine = new ModernDeviceAdapter(new ModernCoffeeMachine());
         Device coffeeMachine = new CoffeeMachine();
         Device kettle = new Kettle();
         Device stove = new Stove();
         Device oven = new Oven();
         Device fridge = new Fridge();
 
-        ProxyDevice coffeeProxy = new ProxyDevice(coffeeMachine);
-        ProxyDevice kettleProxy = new ProxyDevice(kettle);
-        ProxyDevice stoveProxy = new ProxyDevice(stove);
-        ProxyDevice ovenProxy = new ProxyDevice(oven);
-        ProxyDevice fridgeProxy = new ProxyDevice(fridge);
+        // Оборачиваем устройства в декоратор для логирования
+        ProxyDevice modernCoffeeProxy = new ProxyDevice(new LoggingDeviceDecorator(modernCoffeeMachine));
+        ProxyDevice coffeeProxy = new ProxyDevice(new LoggingDeviceDecorator(coffeeMachine));
+        ProxyDevice kettleProxy = new ProxyDevice(new LoggingDeviceDecorator(kettle));
+        ProxyDevice stoveProxy = new ProxyDevice(new LoggingDeviceDecorator(stove));
+        ProxyDevice ovenProxy = new ProxyDevice(new LoggingDeviceDecorator(oven));
+        ProxyDevice fridgeProxy = new ProxyDevice(new LoggingDeviceDecorator(fridge));
 
         // Добавление устройств
+        controller.addDevice(modernCoffeeProxy);
         controller.addDevice(coffeeProxy);
         controller.addDevice(kettleProxy);
         controller.addDevice(stoveProxy);
@@ -32,36 +36,28 @@ public class Main {
         schedule.setSchedule(new Task("07:00", ActionConstants.BOIL_WATER));
         schedule.setSchedule(new Task("08:00", ActionConstants.HEAT_STOVE, 200));
         schedule.setSchedule(new Task("09:00", ActionConstants.HEAT_OVEN, 180, 30));
-        schedule.setSchedule(new Task("20:00", ActionConstants.CHECK_PRODUCTS));
 
-        // Проверка состояния устройств
-        System.out.println("\n-=Проверка устройств=-\n");
+        // Компоновщик: Создание комплекса действий для завтрака
+        ActionComposite breakfast = new ActionComposite("Завтрак");
+        breakfast.addAction(new SingleAction(new Task("06:00", ActionConstants.MAKE_COFFEE)));
+        breakfast.addAction(new SingleAction(new Task("08:00", ActionConstants.HEAT_STOVE, 200)));
+
+        // Проверка состояния устройств с использованием итератора
         controller.checkDevices();
 
-        // Выполнение расписания для 6 утра (приготовить кофе)
-        System.out.println("\n-=06:00=-\n");
-        controller.executeSchedule("06:00");
+        // Выполнение комплекса действий для завтрака (включая ModernCoffeeMachine)
+        System.out.println("\nПолучение алгоритма для завтрака:");
+        breakfast.execute(receipt);
 
-        // Выполнение расписания для 7 утра (вскипятить воду)
-        System.out.println("\n-=07:00=-\n");
-        controller.executeSchedule("07:00");
+        // Вручную вызываем makeCoffee для ModernCoffeeMachine
+        System.out.println("\nManually testing ModernCoffeeMachine:");
+        receipt.makeCoffee();
 
-        // Выполнение расписания для 8 утра (нагреть плиту)
-        System.out.println("\n-=08:00=-\n");
-        controller.executeSchedule("08:00");
-
-        // Выполнение расписания для 9 утра (включить духовку)
-        System.out.println("\n-=09:00=-\n");
-        controller.executeSchedule("09:00");
-
-        // Выполнение расписания для 20:00 (проверить продукты)
-        System.out.println("\n-=20:00=-\n");
+        // Выполнение расписания для 20:00 (проверка продуктов)
         controller.executeSchedule("20:00");
 
         // Проверка состояния и отчет
-        System.out.println("\n-=Проверка устройств=-\n");
         controller.checkDevices();
-        System.out.println("\n-=Неполадки=-\n");
         controller.sendAlert();
     }
 }
