@@ -1,11 +1,17 @@
 class Oven implements Device {
+    private String type = "Oven";
     private boolean isOn = false;
     private int currentTemperature = 0;
     private int remainingMinutes = 0;
 
     @Override
     public String getStatus() {
-        return "Духовка " + (isOn ? "включена" : "выключена") + ", температура - " + currentTemperature + "C, таймер - " + remainingMinutes + "мин";
+        return "Духовка - " + (isOn ? "включена" : "выключена") + ", температура - " + currentTemperature + "C, таймер - " + remainingMinutes + "мин";
+    }
+
+    @Override
+    public String getType(){
+        return this.type;
     }
 
     @Override

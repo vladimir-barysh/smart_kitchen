@@ -27,20 +27,23 @@ class DeviceChecker implements Checker {
         }
         List<String> issues = new ArrayList<>();
         for (ProxyDevice device : controller.getDevices()) {
+            String type = device.getType();
             String status = device.getStatus();
-            if (status.contains("Кофемашина")) {
+            int idDash = status.indexOf(" - ");
+            String name = status.substring(0, idDash).trim();
+            if (type == "CoffeeMachine") {
                 int water = parseValue(status, "воды - ", "мл");
                 int coffee = parseValue(status, "кофе - ", "г");
-                if (water < 100) issues.add("Кофемашина: недостаточно воды");
-                if (coffee < 10) issues.add("Кофемашина: недостаточно кофе");
-            } else if (status.contains("Чайник")) {
+                if (water < 100) issues.add(name + ": недостаточно воды");
+                if (coffee < 10) issues.add(name + ": недостаточно кофе");
+            } else if (type == "Kettle") {
                 int water = parseValue(status, "воды - ", "мл");
-                if (water < 200) issues.add("Чайник: недостаточно воды");
-            } else if (status.contains("Холодильник")) {
+                if (water < 200) issues.add(name + ": недостаточно воды");
+            } else if (type == "Fridge") {
                 int milk = parseValue(status, "молока - ", "мл");
                 int eggs = parseValue(status, "яиц - ", "шт");
-                if (milk < 200) issues.add("Холодильник: мало молока");
-                if (eggs < 2) issues.add("Холодильник: мало яиц");
+                if (milk < 200) issues.add(name + ": мало молока");
+                if (eggs < 2) issues.add(name + ": мало яиц");
             }
         }
         String report = issues.isEmpty() ? "Все компоненты в норме" : String.join("\n", issues);

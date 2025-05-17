@@ -6,7 +6,8 @@ class ProxyDevice implements Device {
         this.realDevice = realDevice;
     }
 
-    public String getDeviceType() {
+    @Override
+    public String getType() {
         return realDevice.getClass().getSimpleName();
     }
 

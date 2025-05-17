@@ -10,7 +10,7 @@ class Receipt {
 
     public void addDevice(ProxyDevice device) {
         String deviceType;
-        switch (device.getDeviceType()) {
+        switch (device.getType()) {
             case "CoffeeMachine":
                 deviceType = "Кофемашина";
                 break;
@@ -27,7 +27,7 @@ class Receipt {
                 deviceType = "Холодильник";
                 break;
             default:
-                throw new IllegalArgumentException("Unknown device type: " + device.getDeviceType());
+                throw new IllegalArgumentException("Unknown device type: " + device.getType());
         }
         devices.put(deviceType, device);
     }

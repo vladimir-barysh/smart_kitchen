@@ -22,7 +22,7 @@ class CentralController {
         if (device != null) {
             devices.add(device);
             receipt.addDevice(device);
-            System.out.println("Device added to CentralController: " + device.getDeviceType());
+            System.out.println("Следующее устройство добавлено в центральный контроллер: " + device.getType());
         }
     }
 
@@ -34,7 +34,7 @@ class CentralController {
     }
 
     public void executeSchedule(String currentTime) {
-        System.out.println("Checking schedule for time: " + currentTime);
+        System.out.println("Получение расписания на: " + currentTime);
         List<Task> tasks = ((ScheduleManager) schedule).getSchedule();
         for (Task task : tasks) {
             if (task.getTime().equals(currentTime)) {

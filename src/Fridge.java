@@ -1,11 +1,17 @@
 class Fridge implements Device {
+    private String type = "Fridge";
     private boolean isOn = true;
     private int milk = 500; // Количество молока в мл
     private int eggs = 1;  // Количество яиц
 
     @Override
     public String getStatus() {
-        return "Холодильник " + (isOn ? "включен" : "выключен") + ", молока - " + milk + "мл, яиц - " + eggs + "шт";
+        return "Холодильник - " + (isOn ? "включен" : "выключен") + ", молока - " + milk + "мл, яиц - " + eggs + "шт";
+    }
+
+    @Override
+    public String getType(){
+        return this.type;
     }
 
     @Override

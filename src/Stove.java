@@ -1,16 +1,22 @@
 class Stove implements Device {
+    private String type = "Stove";
     private boolean isOn = false;
     private int currentTemperature = 0;
 
     @Override
     public String getStatus() {
-        return "Плита " + (isOn ? "включена" : "выключена") + ", температура - " + currentTemperature + "C";
+        return "Плита - " + (isOn ? "включена" : "выключена") + ", температура - " + currentTemperature + "C";
     }
 
     @Override
     public void turnOn() {
         isOn = true;
         System.out.println("Включаю плиту...");
+    }
+
+    @Override
+    public String getType(){
+        return this.type;
     }
 
     @Override

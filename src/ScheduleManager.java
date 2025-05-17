@@ -11,7 +11,7 @@ class ScheduleManager implements ScheduleInterface {
     @Override
     public void setSchedule(Task task) {
         tasks.add(task);
-        System.out.println("Task added: " + task.getAction() + " at " + task.getTime());
+        System.out.println("Получена задача: " + task.getAction() + " в " + task.getTime());
     }
 
     @Override

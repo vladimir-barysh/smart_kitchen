@@ -1,4 +1,5 @@
 class CoffeeMachine implements Device {
+    private String type = "CoffeeMachine";
     private boolean isOn = false;
     private int waterLevel = 100;
     private int coffeeLevel = 50;
@@ -7,7 +8,12 @@ class CoffeeMachine implements Device {
 
     @Override
     public String getStatus() {
-        return "Кофемашина " + (isOn ? "включена" : "выключена") + ", воды - " + waterLevel + "мл, кофе - " + coffeeLevel + "г";
+        return "Кофемашина - " + (isOn ? "включена" : "выключена") + ", воды - " + waterLevel + "мл, кофе - " + coffeeLevel + "г";
+    }
+
+    @Override
+    public String getType(){
+        return this.type;
     }
 
     @Override
@@ -19,7 +25,7 @@ class CoffeeMachine implements Device {
     @Override
     public void turnOff() {
         isOn = false;
-        System.out.println("Выключаю кофемашины...");
+        System.out.println("Выключаю кофемашину...");
     }
 
     @Override
