@@ -13,12 +13,15 @@ public class Main {
         Device stove = new Stove();
         Device oven = new Oven();
         Device fridge = new Fridge();
+        //Создаем объект с помощью адаптера
+        Device modernCoffeeMachine = new ModernCoffeeMachineAdapter(new ModernCoffeeMachine());
 
         ProxyDevice coffeeProxy = new ProxyDevice(coffeeMachine);
         ProxyDevice kettleProxy = new ProxyDevice(kettle);
         ProxyDevice stoveProxy = new ProxyDevice(stove);
         ProxyDevice ovenProxy = new ProxyDevice(oven);
         ProxyDevice fridgeProxy = new ProxyDevice(fridge);
+        ProxyDevice modernCoffeeProxy = new ProxyDevice(modernCoffeeMachine);
 
         // Добавление устройств
         controller.addDevice(coffeeProxy);
@@ -57,6 +60,12 @@ public class Main {
         // Выполнение расписания для 20:00 (проверить продукты)
         System.out.println("\n-=20:00=-\n");
         controller.executeSchedule("20:00");
+
+        System.out.println();
+        controller.addDevice(modernCoffeeProxy);
+        schedule.setSchedule(new Task("10:00", ActionConstants.MAKE_COFFEE));
+        System.out.println("\n-=10:00=-\n");
+        controller.executeSchedule("10:00");
 
         // Проверка состояния и отчет
         System.out.println("\n-=Проверка устройств=-\n");

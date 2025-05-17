@@ -8,7 +8,7 @@ class ProxyDevice implements Device {
 
     @Override
     public String getType() {
-        return realDevice.getClass().getSimpleName();
+        return realDevice.getType();
     }
 
     @Override
