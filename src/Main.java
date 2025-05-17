@@ -7,20 +7,25 @@ public class Main {
         CentralController controller = new CentralController(receipt, schedule, checker);
         checker.setController(controller);
 
-        // Создание устройств и прокси
+        // Создаем устройств
         Device coffeeMachine = new CoffeeMachine();
         Device kettle = new Kettle();
         Device stove = new Stove();
         Device oven = new Oven();
         Device fridge = new Fridge();
-        //Создаем объект с помощью адаптера
+        // Создаем объект с помощью адаптера
         Device modernCoffeeMachine = new ModernCoffeeMachineAdapter(new ModernCoffeeMachine());
 
+        // Создаем объект для логирования
+        LoggingDecorator ovenDecorator = new LoggingDecorator(oven);
+        LoggingDecorator fridgeDecorator = new LoggingDecorator(fridge);
+
+        // Создаем прокси
         ProxyDevice coffeeProxy = new ProxyDevice(coffeeMachine);
         ProxyDevice kettleProxy = new ProxyDevice(kettle);
         ProxyDevice stoveProxy = new ProxyDevice(stove);
-        ProxyDevice ovenProxy = new ProxyDevice(oven);
-        ProxyDevice fridgeProxy = new ProxyDevice(fridge);
+        ProxyDevice ovenProxy = new ProxyDevice(ovenDecorator);
+        ProxyDevice fridgeProxy = new ProxyDevice(fridgeDecorator);
         ProxyDevice modernCoffeeProxy = new ProxyDevice(modernCoffeeMachine);
 
         // Добавление устройств
@@ -72,5 +77,15 @@ public class Main {
         controller.checkDevices();
         System.out.println("\n-=Неполадки=-\n");
         controller.sendAlert();
+
+        // Логирование
+        System.out.println("\nЖурнал духовки:");
+        for (String log : ovenDecorator.getLog()){
+            System.out.println(" -" + log);
+        }
+        System.out.println("\nЖурнал холодильника:");
+        for (String log : fridgeDecorator.getLog()){
+            System.out.println(" -" + log);
+        }
     }
 }
