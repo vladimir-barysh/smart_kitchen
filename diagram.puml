@@ -1,15 +1,4 @@
 @startuml
-interface ActionComponent {
-    +execute(Receipt receipt)
-}
-
-class ActionComposite {
-    -name: String
-    -actions: List<ActionComponent>
-    +addAction(ActionComponent action)
-    +execute(Receipt receipt)
-    +getName()
-}
 
 class ActionConstants{
     +MAKE_COFFEE: String
@@ -29,7 +18,6 @@ class CentralController {
     +checkDevices()
     +executeSchedule()
     +sendAlert()
-    +getAllActionLogs()
 }
 
 interface Checker {
@@ -47,6 +35,7 @@ class CoffeeMachine {
     +turnOn()
     +turnOff()
     +makeCoffee()
+    +reportIssues()
 }
 
 interface Device {
@@ -59,6 +48,7 @@ interface Device {
     +heatStove(int temperature)
     +heatOven(int temperature, int minutes)
     +checkProducts()
+    +reportIssues()
 }
 
 class DeviceChecker {
@@ -91,6 +81,7 @@ class Fridge {
     +turnOn()
     +turnOff()
     +checkProducts()
+    +reportIssues()
 }
 
 class Kettle {
@@ -102,41 +93,7 @@ class Kettle {
     +turnOn()
     +turnOff()
     +boilWater()
-}
-
-class LoggingDecorator {
-    -log: List<String>
-    -device: Device
-    +getLog()
-    +getStatus()
-    +getType()
-    +turnOn()
-    +turnOff()
-    +makeCoffee()
-    +boilWater()
-    +heatOven()
-    +heatStove()
-    +checkProducts()
-}
-
-class ModernCoffeeMachine {
-    -type: String
-    -isOn: boolean
-    -int: waterLevel
-    -int: coffeeLevel
-    +getModernStatus()
-    +getModernType()
-    +turnModernOn()
-    +turnModernOff()
-    +makeModernCoffee()
-}
-
-class ModernCoffeeMachineAdapter {
-    +getStatus()
-    +getType()
-    +turnOn()
-    +turnOff()
-    +makeCoffee()
+    +reportIssues()
 }
 
 class Oven {
@@ -149,6 +106,7 @@ class Oven {
     +turnOn()
     +turnOff()
     +heatOven(int temperature, int minutes)
+    +reportIssues()
 }
 
 class ProxyDevice {
@@ -156,7 +114,6 @@ class ProxyDevice {
     -cachedStatus: String
     +getStatus()
     +getType()
-    +getLoggingDecorator()
     +turnOn()
     +turnOff()
     +makeCoffee()
@@ -164,6 +121,7 @@ class ProxyDevice {
     +heatStove(int temperature)
     +heatOven(int temperature, int minutes)
     +checkProducts()
+    +reportIssues()
 }
 
 class Receipt {
@@ -179,21 +137,23 @@ class Receipt {
 interface ScheduleInterface {
     +setSchedule()
     +getSchedule()
-    +setRoutine()
-    +getRoutines()
 }
 
 class ScheduleManager {
     -tasks: List<Task>
     +setSchedule()
     +getSchedule()
-    +setRoutine()
-    +getRoutines()
 }
 
-class SingleAction {
-    -task: Task
-    +execute(Receipt receipt)
+class SmartKitchenFacade {
+  -controller: CentralController
+  -schedule: ScheduleInterface
+  -receipt: Receipt
+  -checker: DeviceChecker
+  +initializeSystem(Device device)
+  +setupDailyRoutine()
+  +startDay(String currTime)
+  +checkSystemStatus()
 }
 
 class Stove {
@@ -205,51 +165,60 @@ class Stove {
     +turnOn()
     +turnOff()
     +heatStove(int temperature)
+    +reportIssues()
 }
 
 class Task {
     -time: String
-    -action: String
+    -taskType: TaskType
     -temperature: int
     -minutes: int
     +getTime()
     +getAction()
-    +execute(receipt: Receipt)
+    +execute(Receipt receipt)
 }
 
+class TaskType {
+    -action: String
+    +TaskType(String action)
+    +getAction()
+}
+
+class TaskTypeFactory {
+  -taskTypes: Map<String, TaskType>
+  +getTaskType(String action)
+  +getTaskTypeCount()
+}
+
+Device <|.. CoffeeMachine
+Device <|.. Kettle
 Device <|.. Stove
 Device <|.. Oven
 Device <|.. Fridge
-Device <|.. Kettle
-Device <|.. CoffeeMachine
-Device <|.. ModernCoffeeMachineAdapter
-Device <|.. LoggingDecorator
 Device <|.. ProxyDevice
 
-ModernCoffeeMachine o--> ModernCoffeeMachineAdapter
-ProxyDevice o--> Device
-LoggingDecorator o--> Device
-
-Receipt o--> ProxyDevice
-CentralController o--> ProxyDevice
-CentralController o--> ScheduleManager
-CentralController o--> Receipt
+ProxyDevice o--> Device : realDevice
 
 ScheduleInterface <|.. ScheduleManager
-ScheduleManager o--> Task
-ScheduleManager o--> ActionComposite
-
 Checker <|.. DeviceChecker
-DeviceChecker o--> CentralController
-
 DeviceIterator <|.. DeviceListIterator
-DeviceListIterator o--> ProxyDevice
-CentralController o--> DeviceIterator
 
-ActionComponent <|.. ActionComposite
-ActionComponent <|.. SingleAction
-ActionComposite o--> ActionComponent
-SingleAction o--> Task
-CentralController ..> LoggingDecorator
+Task o--> TaskType
+TaskTypeFactory o--> TaskType
+
+CentralController o--> ProxyDevice
+CentralController o--> Checker
+CentralController o--> ScheduleInterface
+CentralController o--> Receipt
+CentralController --> DeviceIterator
+
+Receipt o--> ProxyDevice
+ScheduleManager o--> Task
+DeviceChecker --> CentralController
+
+SmartKitchenFacade o--> CentralController
+SmartKitchenFacade o--> ScheduleInterface
+SmartKitchenFacade o--> Receipt
+SmartKitchenFacade o--> DeviceChecker
 
 @enduml

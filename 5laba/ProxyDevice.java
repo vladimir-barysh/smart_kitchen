@@ -1,11 +1,15 @@
-import java.util.List;
-
 class ProxyDevice implements Device {
     private Device realDevice;
     private String cachedStatus;
 
     public ProxyDevice(Device realDevice) {
         this.realDevice = realDevice;
+    }
+
+    public LoggingDecorator getLoggingDecorator() {
+        Device current = realDevice;
+        while (current instanceof ProxyDevice) current = ((ProxyDevice) current).realDevice;
+        return (current instanceof LoggingDecorator) ? (LoggingDecorator) current : null;
     }
 
     @Override
@@ -66,10 +70,5 @@ class ProxyDevice implements Device {
         String result = realDevice.checkProducts();
         cachedStatus = realDevice.getStatus();
         return result;
-    }
-
-    @Override
-    public List<String> reportIssues() {
-        return realDevice.reportIssues();
     }
 }

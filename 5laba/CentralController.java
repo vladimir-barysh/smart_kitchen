@@ -46,9 +46,27 @@ class CentralController {
                 task.execute(receipt);
             }
         }
+        Map<String, ActionComposite> routines = ((ScheduleManager) schedule).getRoutines();
+        for (Map.Entry<String, ActionComposite> entry : routines.entrySet()) {
+            if (entry.getKey().equals(currentTime)) {
+                entry.getValue().execute(receipt);
+            }
+        }
     }
 
     public void sendAlert() {
         System.out.println(checker.reportStatus());
+    }
+
+    public void getAllActionLogs() {
+        for (ProxyDevice device : devices) {
+            LoggingDecorator decorator = device.getLoggingDecorator();
+            if (decorator != null) {
+                System.out.println(device.getType());
+                for (String log : decorator.getLog()) {
+                    System.out.println("  - " + log);
+                }
+            }
+        }
     }
 }
