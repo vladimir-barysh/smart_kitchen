@@ -36,9 +36,7 @@ public class Main {
         controller.addDevice(fridgeProxy);
 
         // Установка расписания
-        schedule.setSchedule(new Task("06:00", ActionConstants.MAKE_COFFEE));
         schedule.setSchedule(new Task("07:00", ActionConstants.BOIL_WATER));
-        schedule.setSchedule(new Task("08:00", ActionConstants.HEAT_STOVE, 200));
         schedule.setSchedule(new Task("09:00", ActionConstants.HEAT_OVEN, 180, 30));
         schedule.setSchedule(new Task("20:00", ActionConstants.CHECK_PRODUCTS));
 
@@ -46,17 +44,12 @@ public class Main {
         System.out.println("\n-=Проверка устройств=-\n");
         controller.checkDevices();
 
-        // Выполнение расписания для 6 утра (приготовить кофе)
-        System.out.println("\n-=06:00=-\n");
-        controller.executeSchedule("06:00");
-
-        // Выполнение расписания для 7 утра (вскипятить воду)
-        System.out.println("\n-=07:00=-\n");
-        controller.executeSchedule("07:00");
-
-        // Выполнение расписания для 8 утра (нагреть плиту)
-        System.out.println("\n-=08:00=-\n");
-        controller.executeSchedule("08:00");
+        // Выполнение алгоритма для завтрака
+        System.out.println("\n-=Завтрак=-\n");
+        ActionComposite breakfast = new ActionComposite("Завтрак");
+        breakfast.addAction(new SingleAction(new Task("06:00", ActionConstants.MAKE_COFFEE)));
+        breakfast.addAction(new SingleAction(new Task("06:30", ActionConstants.HEAT_STOVE, 70)));
+        breakfast.execute(receipt);
 
         // Выполнение расписания для 9 утра (включить духовку)
         System.out.println("\n-=09:00=-\n");
@@ -66,6 +59,7 @@ public class Main {
         System.out.println("\n-=20:00=-\n");
         controller.executeSchedule("20:00");
 
+        // Проверка адаптера
         System.out.println();
         controller.addDevice(modernCoffeeProxy);
         schedule.setSchedule(new Task("10:00", ActionConstants.MAKE_COFFEE));
