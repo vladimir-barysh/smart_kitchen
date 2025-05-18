@@ -6,6 +6,12 @@ class ProxyDevice implements Device {
         this.realDevice = realDevice;
     }
 
+    public LoggingDecorator getLoggingDecorator() {
+        Device current = realDevice;
+        while (current instanceof ProxyDevice) current = ((ProxyDevice) current).realDevice;
+        return (current instanceof LoggingDecorator) ? (LoggingDecorator) current : null;
+    }
+
     @Override
     public String getType() {
         return realDevice.getType();

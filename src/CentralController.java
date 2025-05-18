@@ -57,4 +57,16 @@ class CentralController {
     public void sendAlert() {
         System.out.println(checker.reportStatus());
     }
+
+    public void getAllActionLogs() {
+        for (ProxyDevice device : devices) {
+            LoggingDecorator decorator = device.getLoggingDecorator();
+            if (decorator != null) {
+                System.out.println(device.getType());
+                for (String log : decorator.getLog()) {
+                    System.out.println("  - " + log);
+                }
+            }
+        }
+    }
 }

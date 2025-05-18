@@ -77,13 +77,8 @@ public class Main {
         controller.sendAlert();
 
         // Логирование
-        System.out.println("\nЖурнал духовки:");
-        for (String log : ovenDecorator.getLog()){
-            System.out.println(" -" + log);
-        }
-        System.out.println("\nЖурнал холодильника:");
-        for (String log : fridgeDecorator.getLog()){
-            System.out.println(" -" + log);
-        }
+        System.out.println("\n-=Логирование=-\n");
+        controller.getAllActionLogs();
+
     }
 }

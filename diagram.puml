@@ -8,6 +8,7 @@ class ActionComposite {
     -actions: List<ActionComponent>
     +addAction(ActionComponent action)
     +execute(Receipt receipt)
+    +getName()
 }
 
 class ActionConstants{
@@ -28,6 +29,7 @@ class CentralController {
     +checkDevices()
     +executeSchedule()
     +sendAlert()
+    +getAllActionLogs()
 }
 
 interface Checker {
@@ -154,6 +156,7 @@ class ProxyDevice {
     -cachedStatus: String
     +getStatus()
     +getType()
+    +getLoggingDecorator()
     +turnOn()
     +turnOff()
     +makeCoffee()
@@ -176,12 +179,16 @@ class Receipt {
 interface ScheduleInterface {
     +setSchedule()
     +getSchedule()
+    +setRoutine()
+    +getRoutines()
 }
 
 class ScheduleManager {
     -tasks: List<Task>
     +setSchedule()
     +getSchedule()
+    +setRoutine()
+    +getRoutines()
 }
 
 class SingleAction {
@@ -216,11 +223,12 @@ Device <|.. Fridge
 Device <|.. Kettle
 Device <|.. CoffeeMachine
 Device <|.. ModernCoffeeMachineAdapter
+Device <|.. LoggingDecorator
 Device <|.. ProxyDevice
 
 ModernCoffeeMachine o--> ModernCoffeeMachineAdapter
-LoggingDecorator o--> Device
 ProxyDevice o--> Device
+LoggingDecorator o--> Device
 
 Receipt o--> ProxyDevice
 CentralController o--> ProxyDevice
@@ -229,16 +237,19 @@ CentralController o--> Receipt
 
 ScheduleInterface <|.. ScheduleManager
 ScheduleManager o--> Task
+ScheduleManager o--> ActionComposite
 
 Checker <|.. DeviceChecker
 DeviceChecker o--> CentralController
 
 DeviceIterator <|.. DeviceListIterator
 DeviceListIterator o--> ProxyDevice
+CentralController o--> DeviceIterator
 
 ActionComponent <|.. ActionComposite
 ActionComponent <|.. SingleAction
 ActionComposite o--> ActionComponent
 SingleAction o--> Task
+CentralController ..> LoggingDecorator
 
 @enduml
