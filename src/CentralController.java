@@ -28,9 +28,12 @@ class CentralController {
 
     public void checkDevices() {
         System.out.println(checker.checkAvailability());
-        for (ProxyDevice device : devices) {
+        DeviceIterator iterator = new DeviceListIterator(devices);
+        while (iterator.hasNext()) {
+            ProxyDevice device = iterator.next();
             System.out.println(device.getStatus());
         }
+
     }
 
     public void executeSchedule(String currentTime) {
