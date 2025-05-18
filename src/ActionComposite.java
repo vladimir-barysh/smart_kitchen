@@ -21,4 +21,8 @@ public class ActionComposite implements ActionComponent {
             action.execute(receipt);
         }
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

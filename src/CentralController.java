@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 class CentralController {
     private List<ProxyDevice> devices;
@@ -14,9 +15,6 @@ class CentralController {
         this.checker = checker;
     }
 
-    public List<ProxyDevice> getDevices() {
-        return devices;
-    }
 
     public void addDevice(ProxyDevice device) {
         if (device != null) {
@@ -24,6 +22,10 @@ class CentralController {
             receipt.addDevice(device);
             System.out.println("Следующее устройство добавлено в центральный контроллер: " + device.getType());
         }
+    }
+
+    public List<ProxyDevice> getDevices() {
+        return devices;
     }
 
     public void checkDevices() {
@@ -42,6 +44,12 @@ class CentralController {
         for (Task task : tasks) {
             if (task.getTime().equals(currentTime)) {
                 task.execute(receipt);
+            }
+        }
+        Map<String, ActionComposite> routines = ((ScheduleManager) schedule).getRoutines();
+        for (Map.Entry<String, ActionComposite> entry : routines.entrySet()) {
+            if (entry.getKey().equals(currentTime)) {
+                entry.getValue().execute(receipt);
             }
         }
     }

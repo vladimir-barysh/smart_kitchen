@@ -1,78 +1,33 @@
 @startuml
-interface Device {
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +getDeviceType()
-    +makeCoffee()
-    +boilWater()
-    +heatStove(int temperature)
-    +heatOven(int temperature, int minutes)
-    +checkProducts()
+interface ActionComponent {
+    +execute(Receipt receipt)
 }
 
-class Stove {
-    -isOn: boolean
-    -currentTemperature: int
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +heatStove(int temperature)
+class ActionComposite {
+    -name: String
+    -actions: List<ActionComponent>
+    +addAction(ActionComponent action)
+    +execute(Receipt receipt)
 }
 
-class Oven {
-    -isOn: boolean
-    -currentTemperature: int
-    -remainingMinutes: int
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +heatOven(int temperature, int minutes)
+class ActionConstants{
+    +MAKE_COFFEE: String
+    +BOIL_WATER: String
+    +HEAT_STOVE: String
+    +HEAT_OVEN: String
+    +CHECK_PRODUCTS: String
 }
 
-class Fridge {
-    -isOn: boolean
-    +milk: int
-    +eggs: int
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +checkProducts()
-}
-
-class Kettle {
-    -isOn: boolean
-    -waterLevel: int
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +boilWater()
-}
-
-class CoffeeMachine {
-    -isOn: boolean
-    -int: waterLevel
-    -int: coffeeLevel
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +makeCoffee()
-}
-
-class ProxyDevice {
-    -realDevice: Device
-    -cachedStatus: String
-    +ProxyDevice()
-    +initializeDevice()
-    +getStatus()
-    +turnOn()
-    +turnOff()
-    +makeCoffee()
-    +boilWater()
-    +heatStove(int temperature)
-    +heatOven(int temperature, int minutes)
-    +checkProducts()
-    +getDeviceType()
+class CentralController {
+    -devices: List<DeviceProxy>
+    -checker: Checker
+    -schedule: ScheduleInterface
+    -receipt: Receipt
+    +addDevice(device: ProxyDevice)
+    +getDevices()
+    +checkDevices()
+    +executeSchedule()
+    +sendAlert()
 }
 
 interface Checker {
@@ -80,12 +35,142 @@ interface Checker {
     +reportStatus()
 }
 
+class CoffeeMachine {
+    -type: String
+    -isOn: boolean
+    -int: waterLevel
+    -int: coffeeLevel
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+}
+
+interface Device {
+    +getStatus()
+    +turnOn()
+    +turnOff()
+    +getType()
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+}
+
 class DeviceChecker {
     -controller: CentralController
+    +setController(CentralController controller)
     +checkAvailability()
     +reportStatus()
     +parseValue()
-    +setController(controller: CentralController)
+}
+
+interface DeviceIterator {
+    +hasNext()
+    +next()
+}
+
+class DeviceListIterator {
+    -devices: List<ProxyDevice>
+    -currentIndex: int
+    +hasNext()
+    +next()
+}
+
+class Fridge {
+    -type: String
+    -isOn: boolean
+    +milk: int
+    +eggs: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +checkProducts()
+}
+
+class Kettle {
+    -type: String
+    -isOn: boolean
+    -waterLevel: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +boilWater()
+}
+
+class LoggingDecorator {
+    -log: List<String>
+    -device: Device
+    +getLog()
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+    +boilWater()
+    +heatOven()
+    +heatStove()
+    +checkProducts()
+}
+
+class ModernCoffeeMachine {
+    -type: String
+    -isOn: boolean
+    -int: waterLevel
+    -int: coffeeLevel
+    +getModernStatus()
+    +getModernType()
+    +turnModernOn()
+    +turnModernOff()
+    +makeModernCoffee()
+}
+
+class ModernCoffeeMachineAdapter {
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+}
+
+class Oven {
+    -type: String
+    -isOn: boolean
+    -currentTemperature: int
+    -remainingMinutes: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +heatOven(int temperature, int minutes)
+}
+
+class ProxyDevice {
+    -realDevice: Device
+    -cachedStatus: String
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+}
+
+class Receipt {
+    -devices: Map<String, ProxyDevice>
+    +addDevice(device: ProxyDevice)
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
 }
 
 interface ScheduleInterface {
@@ -99,17 +184,20 @@ class ScheduleManager {
     +getSchedule()
 }
 
-class CentralController {
-    -devices: List<DeviceProxy>
-    -checker: Checker
-    -schedule: ScheduleInterface
-    -receipt: Receipt
-    +addDevice(device: ProxyDevice)
-    +getDevices()
-    +checkDevices()
-    +setSchedule()
-    +executeSchedule()
-    +sendAlert()
+class SingleAction {
+    -task: Task
+    +execute(Receipt receipt)
+}
+
+class Stove {
+    -type: String
+    -isOn: boolean
+    -currentTemperature: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +heatStove(int temperature)
 }
 
 class Task {
@@ -122,35 +210,35 @@ class Task {
     +execute(receipt: Receipt)
 }
 
-class Receipt {
-    -devices: Map<String, ProxyDevice>
-    +addDevice(device: ProxyDevice)
-    +makeCoffee()
-    +boilWater()
-    +heatStove(int temperature)
-    +heatOven(int temperature, int minutes)
-    +checkProducts()
-}
-
-class ActionConstants{
-    +MAKE_COFFEE: String
-    +BOIL_WATER: String
-    +HEAT_STOVE: String
-    +HEAT_OVEN: String
-    +CHECK_PRODUCTS: String
-}
 Device <|.. Stove
 Device <|.. Oven
 Device <|.. Fridge
 Device <|.. Kettle
 Device <|.. CoffeeMachine
+Device <|.. ModernCoffeeMachineAdapter
 Device <|.. ProxyDevice
-Checker <|.. DeviceChecker
-ScheduleInterface <|.. ScheduleManager
-CentralController o--> "many" ProxyDevice
-CentralController o--> DeviceChecker
+
+ModernCoffeeMachine o--> ModernCoffeeMachineAdapter
+LoggingDecorator o--> Device
+ProxyDevice o--> Device
+
+Receipt o--> ProxyDevice
+CentralController o--> ProxyDevice
 CentralController o--> ScheduleManager
 CentralController o--> Receipt
-ScheduleManager o--> "many" Task
+
+ScheduleInterface <|.. ScheduleManager
+ScheduleManager o--> Task
+
+Checker <|.. DeviceChecker
+DeviceChecker o--> CentralController
+
+DeviceIterator <|.. DeviceListIterator
+DeviceListIterator o--> ProxyDevice
+
+ActionComponent <|.. ActionComposite
+ActionComponent <|.. SingleAction
+ActionComposite o--> ActionComponent
+SingleAction o--> Task
 
 @enduml

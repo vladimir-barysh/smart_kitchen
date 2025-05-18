@@ -16,7 +16,7 @@ public class Main {
         // Создаем объект с помощью адаптера
         Device modernCoffeeMachine = new ModernCoffeeMachineAdapter(new ModernCoffeeMachine());
 
-        // Создаем объект для логирования
+        // Создаем объект для логирования (духовка, холодильник)
         LoggingDecorator ovenDecorator = new LoggingDecorator(oven);
         LoggingDecorator fridgeDecorator = new LoggingDecorator(fridge);
 
@@ -45,11 +45,15 @@ public class Main {
         controller.checkDevices();
 
         // Выполнение алгоритма для завтрака
-        System.out.println("\n-=Завтрак=-\n");
+        System.out.println();
         ActionComposite breakfast = new ActionComposite("Завтрак");
         breakfast.addAction(new SingleAction(new Task("06:00", ActionConstants.MAKE_COFFEE)));
         breakfast.addAction(new SingleAction(new Task("06:30", ActionConstants.HEAT_STOVE, 70)));
-        breakfast.execute(receipt);
+        schedule.setRoutine("06:00", breakfast);
+
+        // Выполнение расписания на завтрак
+        System.out.println("\n-=Завтрак=-\n");
+        controller.executeSchedule("06:00");
 
         // Выполнение расписания для 9 утра (включить духовку)
         System.out.println("\n-=09:00=-\n");
@@ -62,9 +66,9 @@ public class Main {
         // Проверка адаптера
         System.out.println();
         controller.addDevice(modernCoffeeProxy);
-        schedule.setSchedule(new Task("10:00", ActionConstants.MAKE_COFFEE));
-        System.out.println("\n-=10:00=-\n");
-        controller.executeSchedule("10:00");
+        schedule.setSchedule(new Task("01:00", ActionConstants.MAKE_COFFEE));
+        System.out.println("\n-=01:00=-\n");
+        controller.executeSchedule("01:00");
 
         // Проверка состояния и отчет
         System.out.println("\n-=Проверка устройств=-\n");
