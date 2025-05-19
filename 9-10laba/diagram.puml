@@ -1,0 +1,273 @@
+@startuml
+
+class ActionConstants{
+    +MAKE_COFFEE: String
+    +BOIL_WATER: String
+    +HEAT_STOVE: String
+    +HEAT_OVEN: String
+    +CHECK_PRODUCTS: String
+}
+
+class CentralController {
+    -instance: CentralController
+    -devices: List<DeviceProxy>
+    -checker: Checker
+    -schedule: ScheduleInterface
+    -receipt: Receipt
+    +addDevice(device: ProxyDevice)
+    +getDevices()
+    +getInstance(TaskPool taskPool)
+    +getSchedule()
+    +checkDevices()
+    +executeSchedule(String currTime)
+    +sendAlert()
+}
+
+interface Checker {
+    +checkAvailability()
+    +reportStatus()
+}
+
+class CoffeeMachine {
+    -type: String
+    -isOn: boolean
+    -int: waterLevel
+    -int: coffeeLevel
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+}
+
+interface Device {
+    +getStatus()
+    +turnOn()
+    +turnOff()
+    +getType()
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+}
+
+class DeviceChecker {
+    -controller: CentralController
+    +setController(CentralController controller)
+    +checkAvailability()
+    +reportStatus()
+    +parseValue()
+}
+class HomeKitchenDeviceFactory {
+  +createCoffeeMachine(): ProxyDevice
+  +createKettle(): ProxyDevice
+  +createStove(): ProxyDevice
+  +createOven(): ProxyDevice
+  +createFridge(): ProxyDevice
+}
+
+class IndustrialKitchenDeviceFactory {
+  +createCoffeeMachine(): ProxyDevice
+  +createKettle(): ProxyDevice
+  +createStove(): ProxyDevice
+  +createOven(): ProxyDevice
+  +createFridge(): ProxyDevice
+}
+class IndustrialCoffeeMachine {
+  -isOn
+  -waterLevel
+  -coffeeLevel
+  +makeCoffee()
+}
+
+class IndustrialKettle {
+  -isOn
+  -waterLevel
+  +boilWater()
+}
+
+class IndustrialStove {
+  -isOn
+  -currentTemperature
+  +heatStove(int temperature)
+}
+
+class IndustrialOven {
+  -isOn
+  -currentTemperature
+  -remainingMinutes
+  +heatOven(int temperature, int minutes)
+}
+
+class IndustrialFridge {
+  -isOn
+  -milk
+  -eggs
+  +checkProducts()
+}
+
+class TaskPool {
+  -pool
+  -maxSize
+  -createdTasks
+  +acquireTask(String time, String action, int temperature, int minutes)
+  +releaseTask(Task task)
+}
+
+interface DeviceIterator {
+    +hasNext()
+    +next()
+}
+
+class DeviceListIterator {
+    -devices: List<ProxyDevice>
+    -currentIndex: int
+    +hasNext()
+    +next()
+}
+
+class Fridge {
+    -type: String
+    -isOn: boolean
+    +milk: int
+    +eggs: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +checkProducts()
+}
+
+class Kettle {
+    -type: String
+    -isOn: boolean
+    -waterLevel: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +boilWater()
+}
+
+interface KitchenDeviceFactory {
+    +createCoffeeMachine()
+    +createKettle()
+    +createStove()
+    +createOven()
+    +createFridge()
+}
+
+class Oven {
+    -type: String
+    -isOn: boolean
+    -currentTemperature: int
+    -remainingMinutes: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +heatOven(int temperature, int minutes)
+}
+
+class ProxyDevice {
+    -realDevice: Device
+    -cachedStatus: String
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+}
+
+class Receipt {
+    -devices: Map<String, ProxyDevice>
+    +addDevice(device: ProxyDevice)
+    +makeCoffee()
+    +boilWater()
+    +heatStove(int temperature)
+    +heatOven(int temperature, int minutes)
+    +checkProducts()
+}
+
+interface ScheduleInterface {
+    +setSchedule()
+    +getSchedule()
+    +releaseTask(Task task)
+}
+
+class ScheduleManager {
+    -tasks: List<Task>
+    +setSchedule()
+    +getSchedule()
+    +releaseTask(Task task)
+}
+
+class Stove {
+    -type: String
+    -isOn: boolean
+    -currentTemperature: int
+    +getStatus()
+    +getType()
+    +turnOn()
+    +turnOff()
+    +heatStove(int temperature)
+    +reportIssues()
+}
+
+class Task {
+    -time: String
+    -taskType: TaskType
+    -temperature: int
+    -minutes: int
+    -inUse: boolean
+    +getTime()
+    +getAction()
+    +execute(Receipt receipt)
+    +isInUse()
+    +setValues(String time, String action, int temperature, int minutes)
+      +setInUse(boolean inUse)
+      +clone(String time)
+}
+
+Device <|.. CoffeeMachine
+Device <|.. IndustrialCoffeeMachine
+Device <|.. Kettle
+Device <|.. IndustrialKettle
+Device <|.. Stove
+Device <|.. IndustrialStove
+Device <|.. Oven
+Device <|.. IndustrialOven
+Device <|.. Fridge
+Device <|.. IndustrialFridge
+Device <|.. ProxyDevice
+
+ProxyDevice o--> Device
+
+Receipt o--> ProxyDevice
+
+ScheduleInterface <|.. ScheduleManager
+ScheduleManager o--> Task
+ScheduleManager o--> TaskPool
+
+TaskPool o--> Task
+
+Checker <|.. DeviceChecker
+DeviceIterator <|.. DeviceListIterator
+
+CentralController o--> ProxyDevice
+CentralController o--> Checker
+CentralController o--> ScheduleInterface
+CentralController o--> Receipt
+CentralController --> DeviceIterator
+
+DeviceChecker --> CentralController
+
+ProxyDevice o--> KitchenDeviceFactory
+KitchenDeviceFactory <|.. HomeKitchenDeviceFactory
+KitchenDeviceFactory <|.. IndustrialKitchenDeviceFactory
+@enduml
