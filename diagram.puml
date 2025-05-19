@@ -9,14 +9,17 @@ class ActionConstants{
 }
 
 class CentralController {
+    -instance: CentralController
     -devices: List<DeviceProxy>
     -checker: Checker
     -schedule: ScheduleInterface
     -receipt: Receipt
     +addDevice(device: ProxyDevice)
     +getDevices()
+    +getInstance(TaskPool taskPool)
+    +getSchedule()
     +checkDevices()
-    +executeSchedule()
+    +executeSchedule(String currTime)
     +sendAlert()
 }
 
@@ -35,7 +38,6 @@ class CoffeeMachine {
     +turnOn()
     +turnOff()
     +makeCoffee()
-    +reportIssues()
 }
 
 interface Device {
@@ -48,7 +50,6 @@ interface Device {
     +heatStove(int temperature)
     +heatOven(int temperature, int minutes)
     +checkProducts()
-    +reportIssues()
 }
 
 class DeviceChecker {
@@ -57,6 +58,61 @@ class DeviceChecker {
     +checkAvailability()
     +reportStatus()
     +parseValue()
+}
+class HomeKitchenDeviceFactory {
+  +createCoffeeMachine(): ProxyDevice
+  +createKettle(): ProxyDevice
+  +createStove(): ProxyDevice
+  +createOven(): ProxyDevice
+  +createFridge(): ProxyDevice
+}
+
+class IndustrialKitchenDeviceFactory {
+  +createCoffeeMachine(): ProxyDevice
+  +createKettle(): ProxyDevice
+  +createStove(): ProxyDevice
+  +createOven(): ProxyDevice
+  +createFridge(): ProxyDevice
+}
+class IndustrialCoffeeMachine {
+  -isOn
+  -waterLevel
+  -coffeeLevel
+  +makeCoffee()
+}
+
+class IndustrialKettle {
+  -isOn
+  -waterLevel
+  +boilWater()
+}
+
+class IndustrialStove {
+  -isOn
+  -currentTemperature
+  +heatStove(int temperature)
+}
+
+class IndustrialOven {
+  -isOn
+  -currentTemperature
+  -remainingMinutes
+  +heatOven(int temperature, int minutes)
+}
+
+class IndustrialFridge {
+  -isOn
+  -milk
+  -eggs
+  +checkProducts()
+}
+
+class TaskPool {
+  -pool
+  -maxSize
+  -createdTasks
+  +acquireTask(String time, String action, int temperature, int minutes)
+  +releaseTask(Task task)
 }
 
 interface DeviceIterator {
@@ -81,7 +137,6 @@ class Fridge {
     +turnOn()
     +turnOff()
     +checkProducts()
-    +reportIssues()
 }
 
 class Kettle {
@@ -93,7 +148,14 @@ class Kettle {
     +turnOn()
     +turnOff()
     +boilWater()
-    +reportIssues()
+}
+
+interface KitchenDeviceFactory {
+    +createCoffeeMachine()
+    +createKettle()
+    +createStove()
+    +createOven()
+    +createFridge()
 }
 
 class Oven {
@@ -106,7 +168,6 @@ class Oven {
     +turnOn()
     +turnOff()
     +heatOven(int temperature, int minutes)
-    +reportIssues()
 }
 
 class ProxyDevice {
@@ -121,7 +182,6 @@ class ProxyDevice {
     +heatStove(int temperature)
     +heatOven(int temperature, int minutes)
     +checkProducts()
-    +reportIssues()
 }
 
 class Receipt {
@@ -137,23 +197,14 @@ class Receipt {
 interface ScheduleInterface {
     +setSchedule()
     +getSchedule()
+    +releaseTask(Task task)
 }
 
 class ScheduleManager {
     -tasks: List<Task>
     +setSchedule()
     +getSchedule()
-}
-
-class SmartKitchenFacade {
-  -controller: CentralController
-  -schedule: ScheduleInterface
-  -receipt: Receipt
-  -checker: DeviceChecker
-  +initializeSystem(Device device)
-  +setupDailyRoutine()
-  +startDay(String currTime)
-  +checkSystemStatus()
+    +releaseTask(Task task)
 }
 
 class Stove {
@@ -173,38 +224,40 @@ class Task {
     -taskType: TaskType
     -temperature: int
     -minutes: int
+    -inUse: boolean
     +getTime()
     +getAction()
     +execute(Receipt receipt)
-}
-
-class TaskType {
-    -action: String
-    +TaskType(String action)
-    +getAction()
-}
-
-class TaskTypeFactory {
-  -taskTypes: Map<String, TaskType>
-  +getTaskType(String action)
-  +getTaskTypeCount()
+    +isInUse()
+    +setValues(String time, String action, int temperature, int minutes)
+      +setInUse(boolean inUse)
+      +clone(String time)
 }
 
 Device <|.. CoffeeMachine
+Device <|.. IndustrialCoffeeMachine
 Device <|.. Kettle
+Device <|.. IndustrialKettle
 Device <|.. Stove
+Device <|.. IndustrialStove
 Device <|.. Oven
+Device <|.. IndustrialOven
 Device <|.. Fridge
+Device <|.. IndustrialFridge
 Device <|.. ProxyDevice
 
-ProxyDevice o--> Device : realDevice
+ProxyDevice o--> Device
+
+Receipt o--> ProxyDevice
 
 ScheduleInterface <|.. ScheduleManager
+ScheduleManager o--> Task
+ScheduleManager o--> TaskPool
+
+TaskPool o--> Task
+
 Checker <|.. DeviceChecker
 DeviceIterator <|.. DeviceListIterator
-
-Task o--> TaskType
-TaskTypeFactory o--> TaskType
 
 CentralController o--> ProxyDevice
 CentralController o--> Checker
@@ -212,13 +265,9 @@ CentralController o--> ScheduleInterface
 CentralController o--> Receipt
 CentralController --> DeviceIterator
 
-Receipt o--> ProxyDevice
-ScheduleManager o--> Task
 DeviceChecker --> CentralController
 
-SmartKitchenFacade o--> CentralController
-SmartKitchenFacade o--> ScheduleInterface
-SmartKitchenFacade o--> Receipt
-SmartKitchenFacade o--> DeviceChecker
-
+ProxyDevice o--> KitchenDeviceFactory
+KitchenDeviceFactory <|.. HomeKitchenDeviceFactory
+KitchenDeviceFactory <|.. IndustrialKitchenDeviceFactory
 @enduml
