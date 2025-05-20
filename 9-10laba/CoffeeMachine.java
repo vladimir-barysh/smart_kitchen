@@ -21,8 +21,12 @@ class CoffeeMachine implements Device {
 
     @Override
     public void turnOn() {
-        isOn = true;
-        System.out.println("Включаю кофемашину...");
+        if (!isOn) {
+            isOn = true;
+            System.out.println("Включаю кофемашину...");
+        }else {
+            System.out.println("Кофемашина уже включена"); }
+
     }
 
     @Override
